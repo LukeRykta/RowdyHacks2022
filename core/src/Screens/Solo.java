@@ -7,8 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import mygdx.game.RhythmGame;
+
+import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
     private final SpriteBatch batch;
@@ -16,6 +20,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     private final Texture testImg;
 
+    private final Array<Rectangle> testNotes;
+    private final Array<Rectangle> testNote;
 
     public Solo(RhythmGame context) {
         super(context);
@@ -25,6 +31,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+
+        testNotes = new Array<Rectangle>();
+        testNote = new Array<Rectangle>();
     }
 
     public void handleInput(float dt){
@@ -38,6 +47,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void update(float dt){
+        for (Iterator<Rectangle> iter = testNotes.iterator(); iter.hasNext();) {
+            Rectangle note = iter.next();
+            note.y -= 100 * dt;
+
+            if (note.y + 64 < 0){
+                iter.remove();
+            }
+        }
+
         handleInput(dt);
     }
 
@@ -51,8 +69,18 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
+
+        for(Rectangle testNote: testNotes)
+            batch.draw(testImg, testNote.x, testNote.y);
+
         batch.draw(testImg, 100, 100);
         batch.end();
+    }
+
+    @Override
+    public void dispose(){
+        testImg.dispose();
+        batch.dispose();
     }
 
     @Override
