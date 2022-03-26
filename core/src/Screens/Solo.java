@@ -70,6 +70,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void update(float dt){
+        iterHandle(dt);
+        handleInput(dt);
+    }
+
+    public void iterHandle(float dt){
         for (Iterator<Rectangle> iter = testNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
             note.y -= 100 * dt;
@@ -84,7 +89,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 }
             }
         }
-        handleInput(dt);
     }
 
     @Override
