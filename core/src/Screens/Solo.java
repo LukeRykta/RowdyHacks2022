@@ -34,7 +34,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         testNotes = new Array<Rectangle>(); // array of rectangle objects that will store each individual note
         Rectangle testNote = new Rectangle(); // Rectangle object that will contain size info and hitboxes
-        testNote.x = 200; // position on x axis for each note
+        testNote.x = gamecam.viewportWidth / 2-16; // position on x axis for each note
         testNote.y = gamecam.viewportHeight + 12; // set to max y + a lil extra so it appears the notes spawn about the screen
         testNote.width = 32; // define our note HITBOX width
         testNote.height = 32; // define our note HITBOX height
@@ -53,7 +53,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     public void createTriggers() {
         triggerDown = new Rectangle();
-        triggerDown.x = 200;
+        triggerDown.x = gamecam.viewportWidth / 2-16;
         triggerDown.y = gamecam.viewportHeight / 16;
         triggerDown.width = 32; // set the trigger HITBOX to be the real width of the trigger
         triggerDown.height = 16; // set the trigger HITBOX to be half the size of the trigger so we cant hit notes that are far outside of the range we want
@@ -102,7 +102,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         batch.begin();
 
-        batch.draw(downTrigger, 200, 0); // down
+        batch.draw(downTrigger, gamecam.viewportWidth/2-16, 0); // down
         for(Rectangle testNote: testNotes)
             batch.draw(downArrow, testNote.x, testNote.y);
 
