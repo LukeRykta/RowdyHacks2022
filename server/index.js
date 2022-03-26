@@ -18,7 +18,7 @@ let rooms = [];
 
 //variables that might be used.
 let roomLimit = 0;
-
+let roomIndex = 0;
 //listens for server connection (i.e 3000)
 server.listen(3000, function(){
     console.log("Server is now running...");
@@ -35,15 +35,45 @@ server.listen(3000, function(){
  */
 io.on('connection', function(socket){
     console.log("Player Connected!");
-    console.log(rooms.length);
+    console.log("Length of room before create: " + rooms.length);
+
+    //Stores player data into two different arrays. One indexed 0...i and one indexed by players socket id.
+    socket.on("storePlayer", function(newPlayer){
+       players.push(new player(newPlayer.name, socket.id));
+       person[socket.id] = (new player(newPlayer.name, socket.id));
+       //console.log(players[0]);
+       //console.log(person[socket.id]);
+
+    });
+    /*
+     roomCheck checks if rooms exist, if not, create a new room and store current
+     player
+     */
     socket.on("roomCheck", function(newPlayer) {
         if(rooms.length === 0){
+            //creates room with unique room id, stores name of player and player id too.
+            let id = uuid.v4();
+            let room = new Room(newPlayer, id, socket.id);
+            rooms.push(room);
+            //add room to socket and join the room.
+            socket.room = newPlayer.name;
+            socket.join(socket.room);
 
+            room.addPerson(socket.id);
+            person[socket.id].inroom = true;
         }else{
             for(let i = 0; i < rooms.length; i++){
 
             }
         }
+        console.log("Length of room after create: " + rooms.length);
+        console.log(rooms[0]);
     });
 
 });
+
+function player(name, id){
+    this.name = name;
+    this.id = id;
+    this.inroom = false;
+}

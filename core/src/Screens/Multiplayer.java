@@ -6,6 +6,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import mygdx.game.RhythmGame;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -43,7 +44,12 @@ public class Multiplayer extends AbstractScreen {
         socket.on(Socket.EVENT_CONNECT, args -> {
             Gdx.app.log("SocketIO", "connected.");
             JSONObject newPlayer = new JSONObject();
-
+            try{
+                newPlayer.put("name", userName);
+            } catch(JSONException e){
+                Gdx.app.log("SocketIO", "Cannot store player data!");
+            }
+            socket.emit("storePlayer", newPlayer);
             socket.emit("roomCheck", newPlayer);
         });
 
