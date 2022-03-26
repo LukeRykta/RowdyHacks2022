@@ -25,10 +25,20 @@ public class Solo extends AbstractScreen implements InputProcessor {
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
     }
 
+    public void handleInput(float dt){
+
+    }
+
+    public void update(float dt){
+        handleInput(dt);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        update(delta);
 
         batch.setProjectionMatrix(gamecam.combined);
 
