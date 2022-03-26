@@ -3,6 +3,7 @@ package Screens;
 import com.badlogic.gdx.Screen;
 
 public enum ScreenType {
+    OPENING(Opening.class),
     MENU(Menu.class),
     SOLO(Solo.class),
     MULTI(Multiplayer.class);

@@ -70,7 +70,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y){
                 forwardSound.play();
                 System.out.println("Button clicked");
-
             }
         });
     }
@@ -98,12 +97,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
         stage.draw();
         //FIXME Menu button navigation
         //if(Gdx.input.isKeyPressed(Keys.UP))
-
     }
 
     @Override
     public void show(){
-        music.play();
         Gdx.input.setInputProcessor(stage);
     }
 
