@@ -39,6 +39,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         testNote.width = 32; // define our note HITBOX width
         testNote.height = 32; // define our note HITBOX height
         testNotes.add(testNote); // put our note object in set of notes
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/star.mp3"));
     }
 
     public void createCamera(){
@@ -120,6 +122,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
         downArrow.dispose();
         downTrigger.dispose();
         batch.dispose();
+    }
+    @Override
+    public void show(){
+        music.play();
+    }
+
+    @Override
+    public void hide(){
+        music.stop();
     }
 
     @Override
