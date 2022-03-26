@@ -8,11 +8,12 @@ import mygdx.game.RhythmGame;
 public class AbstractScreen implements Screen {
     protected final RhythmGame context;
     protected final FitViewport viewport;
-    protected Music music;
+    protected final Music music;
 
     public AbstractScreen(final RhythmGame context) {
         this.context = context;
         viewport = context.getScreenViewport();
+        music = context.getMusic();
     }
 
     @Override

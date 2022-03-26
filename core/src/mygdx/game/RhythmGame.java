@@ -24,6 +24,7 @@ public class RhythmGame extends Game {
 	public static String username = "";
 	private EnumMap<ScreenType, AbstractScreen> screenCache; // defining our screenCache which will allow us to change screens without losing data
 	private FitViewport screenViewport; // define the ratio of our screen
+	private Music music;
 	SpriteBatch batch;
 	Texture img;
 
@@ -36,6 +37,7 @@ public class RhythmGame extends Game {
 
 		screenCache = new EnumMap<ScreenType, AbstractScreen>(ScreenType.class); // create our cache
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
+		music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/menu.mp3"));
 
 		try {
 			setScreen(ScreenType.OPENING); // attempt to set screen to our menu (this will create a new screen if it's null)
@@ -59,6 +61,10 @@ public class RhythmGame extends Game {
 
 	public FitViewport getScreenViewport() {
 		return screenViewport;
+	}
+
+	public Music getMusic() {
+		return music;
 	}
 
 	public void setScreen(final ScreenType screenType) throws ReflectionException {

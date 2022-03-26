@@ -41,7 +41,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
     }
 
     public void initMusic(){
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
         forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
     }
 
@@ -101,7 +100,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void show(){
-        music.play();
+        if(!music.isPlaying()){
+            music.play();
+        }
         Gdx.input.setInputProcessor(stage);
     }
 

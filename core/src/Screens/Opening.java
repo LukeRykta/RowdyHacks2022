@@ -38,7 +38,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     public void initMusic(){
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/menu.mp3"));
         //todo add sounds and start music here
         forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
     }
@@ -82,7 +81,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     }
 
-    public void handleInput(float dt) throws ReflectionException {
+    public void handleInput(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             RhythmGame.username = name.getText();
             try{

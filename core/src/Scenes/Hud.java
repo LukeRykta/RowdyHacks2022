@@ -14,8 +14,6 @@ import mygdx.game.RhythmGame;
 
 public class Hud implements Disposable {
     public Stage stage;
-    private Viewport viewport;
-    private Skin skin;
 
     public static Integer score;
     private static Label scoreLabel;
@@ -25,10 +23,10 @@ public class Hud implements Disposable {
     Table table = new Table();
 
     public Hud (SpriteBatch sb){
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         score = 0;
 
-        viewport = new StretchViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT, new OrthographicCamera());
+        Viewport viewport = new StretchViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
         table.top();
@@ -38,7 +36,7 @@ public class Hud implements Disposable {
         exclaimLabel = new Label(String.format("%s", exclaim), skin);
 
         table.add(scoreLabel).expandX();
-        table.row();
+        //table.row();
         table.add(exclaimLabel).expand();
         stage.addActor(table);
     }

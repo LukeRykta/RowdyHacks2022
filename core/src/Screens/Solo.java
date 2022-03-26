@@ -52,8 +52,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         createTextures(); // load our image files into local variables
         createTriggers(); // create triggers (hitboxes, position on screen, size)
         createNoteArrays();
-
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/star.mp3"));
     }
 
     public void createCamera(){
@@ -272,7 +270,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.dispose();
     }
     @Override
-    public void show(){music.play();}
+    public void show(){
+        //music.play();
+    }
 
     @Override
     public void hide(){
