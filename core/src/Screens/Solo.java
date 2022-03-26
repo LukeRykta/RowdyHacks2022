@@ -22,6 +22,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     private final Array<Rectangle> testNotes;
 
+
     public Solo(RhythmGame context) {
         super(context);
         batch = new SpriteBatch();
@@ -38,6 +39,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         testNote.width = 32;
         testNote.height = 32;
         testNotes.add(testNote);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/star.mp3"));
     }
 
     public void handleInput(float dt){
@@ -79,6 +82,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         //batch.draw(testImg, 100, 100);
         batch.end();
+    }
+    @Override
+    public void show(){
+        music.play();
+    }
+
+    @Override
+    public void hide(){
+        music.stop();
     }
 
     @Override

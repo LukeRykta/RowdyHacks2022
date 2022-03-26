@@ -2,7 +2,9 @@ package Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
@@ -19,24 +22,27 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import mygdx.game.RhythmGame;
 
 import javax.swing.event.MenuKeyListener;
+import javax.swing.event.MenuListener;
 
 public class Menu extends AbstractScreen implements InputProcessor {
 
     private Skin skin;
     private Stage stage;
     private Button testButton;
-    private Group buttongroup;
+
 
 
     public Menu(final RhythmGame context) {
         super(context);
         initSkin();
         initStage();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
     }
 
 
     public void handleInput(float dt){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
             try {
                 context.setScreen(ScreenType.SOLO);
             } catch (ReflectionException e){
@@ -83,11 +89,21 @@ public class Menu extends AbstractScreen implements InputProcessor {
         update(delta);
         stage.act(delta);
         stage.draw();
+        //FIXME Menu button navigation
+        //if(Gdx.input.isKeyPressed(Keys.UP))
+
+
     }
 
     @Override
     public void show(){
+        music.play();
         Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide(){
+        music.stop();
     }
 
     @Override
