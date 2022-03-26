@@ -21,7 +21,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private final Texture testImg;
 
     private final Array<Rectangle> testNotes;
-    private final Array<Rectangle> testNote;
 
     public Solo(RhythmGame context) {
         super(context);
@@ -33,7 +32,13 @@ public class Solo extends AbstractScreen implements InputProcessor {
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
 
         testNotes = new Array<Rectangle>();
-        testNote = new Array<Rectangle>();
+        Rectangle testNote = new Rectangle();
+        testNote.x = 200;
+        testNote.y = gamecam.viewportHeight + 12;
+        testNote.width = 32;
+        testNote.height = 32;
+        testNotes.add(testNote);
+
     }
 
     public void handleInput(float dt){
@@ -48,10 +53,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     public void update(float dt){
         for (Iterator<Rectangle> iter = testNotes.iterator(); iter.hasNext();) {
-            Rectangle note = iter.next();
+            Rectangle note = iter.next(); // create note for each existing object in notes
             note.y -= 100 * dt;
 
-            if (note.y + 64 < 0){
+            if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
             }
         }
@@ -73,8 +78,13 @@ public class Solo extends AbstractScreen implements InputProcessor {
         for(Rectangle testNote: testNotes)
             batch.draw(testImg, testNote.x, testNote.y);
 
-        batch.draw(testImg, 100, 100);
+        //batch.draw(testImg, 100, 100);
         batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gamecam.update();
     }
 
     @Override
