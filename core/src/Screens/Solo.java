@@ -20,6 +20,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     private Texture downArrow;
     private Texture downTrigger;
+    private Rectangle triggerDown;
 
     private final Array<Rectangle> testNotes;
 
@@ -29,6 +30,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
         createTextures(); // load our image files into local variables
+        createTriggers();
 
         testNotes = new Array<Rectangle>(); // array of rectangle objects that will store each individual note
         Rectangle testNote = new Rectangle(); // Rectangle object that will contain size info and hitboxes
@@ -49,6 +51,14 @@ public class Solo extends AbstractScreen implements InputProcessor {
         downTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
     }
 
+    public void createTriggers() {
+        triggerDown = new Rectangle();
+        triggerDown.x = 200;
+        triggerDown.y = gamecam.viewportHeight / 16;
+        triggerDown.width = 32; // set the trigger HITBOX to be the real width of the trigger
+        triggerDown.height = 16; // set the trigger HITBOX to be half the size of the trigger so we cant hit notes that are far outside of the range we want
+    }
+
     public void handleInput(float dt){
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             try {
@@ -66,6 +76,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
+            }
+            if(note.overlaps(triggerDown)) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                    //System.out.println("EVENT: downArrow triggered");
+                    iter.remove();
+                }
             }
         }
         handleInput(dt);
