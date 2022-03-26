@@ -1,9 +1,12 @@
 package Screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import mygdx.game.RhythmGame;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -37,6 +40,12 @@ public class Multiplayer extends AbstractScreen {
     }
 
     public void configSocketEvents(){
+        socket.on(Socket.EVENT_CONNECT, args -> {
+            Gdx.app.log("SocketIO", "connected.");
+            JSONObject newPlayer = new JSONObject();
+
+            socket.emit("roomCheck", newPlayer);
+        });
 
     }
 

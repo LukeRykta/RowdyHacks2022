@@ -16,31 +16,47 @@ import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
     private final SpriteBatch batch;
-    private final OrthographicCamera gamecam;
+    private OrthographicCamera gamecam;
 
-    private final Texture testImg;
+    private Texture downArrow;
+    private Texture downTrigger;
+    private Rectangle triggerDown;
 
     private final Array<Rectangle> testNotes;
 
-
     public Solo(RhythmGame context) {
-        super(context);
-        batch = new SpriteBatch();
+        super(context); // receive cache context
+        batch = new SpriteBatch(); // create batch to store all our sprite objects
 
-        testImg = new Texture(Gdx.files.internal("gameGFX/triggers/downTrigger.png"));
+        createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
+        createTextures(); // load our image files into local variables
+        createTriggers();
 
+        testNotes = new Array<Rectangle>(); // array of rectangle objects that will store each individual note
+        Rectangle testNote = new Rectangle(); // Rectangle object that will contain size info and hitboxes
+        testNote.x = gamecam.viewportWidth / 2-16; // position on x axis for each note
+        testNote.y = gamecam.viewportHeight + 12; // set to max y + a lil extra so it appears the notes spawn about the screen
+        testNote.width = 32; // define our note HITBOX width
+        testNote.height = 32; // define our note HITBOX height
+        testNotes.add(testNote); // put our note object in set of notes
+    }
+
+    public void createCamera(){
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+    }
 
-        testNotes = new Array<Rectangle>();
-        Rectangle testNote = new Rectangle();
-        testNote.x = 200;
-        testNote.y = gamecam.viewportHeight + 12;
-        testNote.width = 32;
-        testNote.height = 32;
-        testNotes.add(testNote);
+    public void createTextures(){
+        downArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
+        downTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
+    }
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/star.mp3"));
+    public void createTriggers() {
+        triggerDown = new Rectangle();
+        triggerDown.x = gamecam.viewportWidth / 2-16;
+        triggerDown.y = gamecam.viewportHeight / 16;
+        triggerDown.width = 32; // set the trigger HITBOX to be the real width of the trigger
+        triggerDown.height = 16; // set the trigger HITBOX to be half the size of the trigger so we cant hit notes that are far outside of the range we want
     }
 
     public void handleInput(float dt){
@@ -54,6 +70,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void update(float dt){
+        iterHandle(dt);
+        handleInput(dt);
+    }
+
+    public void iterHandle(float dt){
         for (Iterator<Rectangle> iter = testNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
             note.y -= 100 * dt;
@@ -61,14 +82,18 @@ public class Solo extends AbstractScreen implements InputProcessor {
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
             }
+            if(note.overlaps(triggerDown)) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                    //System.out.println("EVENT: downArrow triggered");
+                    iter.remove();
+                }
+            }
         }
-
-        handleInput(dt);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 1, 0, 1);
+        Gdx.gl.glClearColor(.5f, .5f, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         update(delta);
@@ -77,20 +102,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         batch.begin();
 
+        batch.draw(downTrigger, gamecam.viewportWidth/2-16, 0); // down
         for(Rectangle testNote: testNotes)
-            batch.draw(testImg, testNote.x, testNote.y);
+            batch.draw(downArrow, testNote.x, testNote.y);
 
         //batch.draw(testImg, 100, 100);
         batch.end();
-    }
-    @Override
-    public void show(){
-        music.play();
-    }
-
-    @Override
-    public void hide(){
-        music.stop();
     }
 
     @Override
@@ -100,7 +117,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void dispose(){
-        testImg.dispose();
+        downArrow.dispose();
+        downTrigger.dispose();
         batch.dispose();
     }
 

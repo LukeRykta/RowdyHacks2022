@@ -30,13 +30,12 @@ public class RhythmGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 
 		screenCache = new EnumMap<ScreenType, AbstractScreen>(ScreenType.class); // create our cache
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
 
 		try {
-			setScreen(ScreenType.MENU); // attempt to set screen to our menu (this will create a new screen if it's null)
+			setScreen(ScreenType.SOLO); // attempt to set screen to our menu (this will create a new screen if it's null)
 		} catch (ReflectionException e) {
 			e.printStackTrace();
 		}
