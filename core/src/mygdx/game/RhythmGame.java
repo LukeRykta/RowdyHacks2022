@@ -2,10 +2,13 @@ package mygdx.game;
 
 import Screens.AbstractScreen;
 import Screens.ScreenType;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -26,7 +29,7 @@ public class RhythmGame extends Game {
 
 	public static int V_WIDTH = 400; // use vwidth and vheight for scaling sprites and screens
 	public static int V_HEIGHT = 208;
-	
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -39,6 +42,8 @@ public class RhythmGame extends Game {
 		} catch (ReflectionException e) {
 			e.printStackTrace();
 		}
+
+		Gdx.app.setLogLevel(Application.LOG_ERROR);
 	}
 
 	@Override

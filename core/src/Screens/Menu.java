@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -30,14 +31,18 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Stage stage;
     private Button testButton;
 
-
+    protected Sound forwardSound;
 
     public Menu(final RhythmGame context) {
         super(context);
         initSkin();
         initStage();
+        initMusic();
+    }
 
+    public void initMusic(){
         music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
+        forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
     }
 
     private void initSkin(){
@@ -63,7 +68,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
         testButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
+                forwardSound.play();
                 System.out.println("Button clicked");
+
             }
         });
     }
