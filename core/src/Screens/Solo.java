@@ -1,11 +1,40 @@
 package Screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import mygdx.game.RhythmGame;
 
 public class Solo extends AbstractScreen implements InputProcessor {
+    private final SpriteBatch batch;
+    private final OrthographicCamera gamecam;
+
+    private final Texture testImg;
+
+
     public Solo(RhythmGame context) {
         super(context);
+        batch = new SpriteBatch();
+
+        testImg = new Texture(Gdx.files.internal("downTrigger.png"));
+
+        gamecam = new OrthographicCamera();
+        gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 1, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(gamecam.combined);
+
+        batch.begin();
+        batch.draw(testImg, 100, 100);
+        batch.end();
     }
 
     @Override
