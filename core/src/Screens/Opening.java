@@ -121,7 +121,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide() {
-        music.stop();
         stage.dispose();
     }
 

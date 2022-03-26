@@ -272,9 +272,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.dispose();
     }
     @Override
-    public void show(){
-        music.play();
-    }
+    public void show(){music.play();}
 
     @Override
     public void hide(){
