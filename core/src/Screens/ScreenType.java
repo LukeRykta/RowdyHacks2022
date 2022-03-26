@@ -4,8 +4,8 @@ import com.badlogic.gdx.Screen;
 
 public enum ScreenType {
     MENU(Menu.class),
-    SOLO(Solo.class);
-
+    SOLO(Solo.class),
+    MULTI(Multiplayer.class);
     private final Class<? extends AbstractScreen> screenClass;
 
     ScreenType(final Class<? extends AbstractScreen> screenClass) {
