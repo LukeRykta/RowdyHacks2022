@@ -33,7 +33,7 @@ server.listen(3000, function(){
     5. Once the game ends the points should be compared and a winner MUST be announced. After a 5 second countdown multiplayer.java will boot you to the menu screen.
  */
 io.on('connection', function(socket){
-
+    console.log("Player Connected!");
 
 
 
