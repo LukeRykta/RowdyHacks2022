@@ -1,5 +1,6 @@
 package Screens;
 
+import Scenes.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -15,6 +16,7 @@ import mygdx.game.RhythmGame;
 import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
+    private Hud hud;
     private final SpriteBatch batch;
     private OrthographicCamera gamecam;
 
@@ -27,6 +29,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public Solo(RhythmGame context) {
         super(context); // receive cache context
         batch = new SpriteBatch(); // create batch to store all our sprite objects
+        hud = new Hud(batch);
 
         createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
         createTextures(); // load our image files into local variables
@@ -62,6 +65,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void handleInput(float dt){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) // exit game
+            Gdx.app.exit();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) //left pressed
+            Hud.removeScore(10);
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
             try {
                 context.setScreen(ScreenType.MENU);
@@ -74,6 +83,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public void update(float dt){
         iterHandle(dt);
         handleInput(dt);
+        hud.update(dt);
     }
 
     public void iterHandle(float dt){
@@ -83,9 +93,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
+                Hud.removeScore(10);
             }
             if(note.overlaps(triggerDown)) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                    Hud.addScore(20);
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
@@ -98,8 +110,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         Gdx.gl.glClearColor(.5f, .5f, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        update(delta);
-
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
@@ -110,6 +120,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         //batch.draw(testImg, 100, 100);
         batch.end();
+
+        batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.update(delta);
+        hud.stage.draw();
+        update(delta);
     }
 
     @Override

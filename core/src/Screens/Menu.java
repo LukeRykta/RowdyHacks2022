@@ -40,16 +40,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
     }
 
-
-    public void handleInput(float dt){
-        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
-            try {
-                context.setScreen(ScreenType.SOLO);
-            } catch (ReflectionException e){
-                e.printStackTrace();
-            }
-        }
-    }
     private void initSkin(){
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
     }
@@ -78,6 +68,16 @@ public class Menu extends AbstractScreen implements InputProcessor {
         });
     }
 
+    public void handleInput(float dt){
+        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
+            try {
+                context.setScreen(ScreenType.SOLO);
+            } catch (ReflectionException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void update(float dt){
         handleInput(dt);
     }
@@ -91,7 +91,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
         stage.draw();
         //FIXME Menu button navigation
         //if(Gdx.input.isKeyPressed(Keys.UP))
-
 
     }
 
