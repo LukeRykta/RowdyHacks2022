@@ -26,7 +26,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
         super(context);
         batch = new SpriteBatch();
 
-        testImg = new Texture(Gdx.files.internal("gameGFX/downTrigger.png"));
+        testImg = new Texture(Gdx.files.internal("gameGFX/triggers/downTrigger.png"));
 
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
