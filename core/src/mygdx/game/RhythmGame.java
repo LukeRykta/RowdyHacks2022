@@ -35,7 +35,7 @@ public class RhythmGame extends Game {
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
 
 		try {
-			setScreen(ScreenType.SOLO); // attempt to set screen to our menu (this will create a new screen if it's null)
+			setScreen(ScreenType.MENU); // attempt to set screen to our menu (this will create a new screen if it's null)
 		} catch (ReflectionException e) {
 			e.printStackTrace();
 		}

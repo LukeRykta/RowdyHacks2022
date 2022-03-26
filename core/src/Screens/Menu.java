@@ -4,13 +4,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import mygdx.game.RhythmGame;
 
+import javax.swing.event.MenuKeyListener;
+
 public class Menu extends AbstractScreen implements InputProcessor {
+
+    private Skin skin;
+    private Stage stage;
+    private Button testButton;
+    private Group buttongroup;
+
+
     public Menu(final RhythmGame context) {
         super(context);
+        initSkin();
+        initStage();
     }
+
 
     public void handleInput(float dt){
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
@@ -21,6 +44,33 @@ public class Menu extends AbstractScreen implements InputProcessor {
             }
         }
     }
+    private void initSkin(){
+        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+    }
+
+    private void initStage(){
+        stage  = new Stage(new ScreenViewport());
+
+        final Table testTable = new Table(skin);
+        testTable.setWidth(stage.getWidth());
+        testTable.align(Align.center|Align.top);
+        testTable.setPosition(0, Gdx.graphics.getHeight());
+
+        testButton = new TextButton("TEST", skin);
+
+        initActors();
+        testTable.add(testButton);
+        stage.addActor(testTable);
+    }
+
+    private void initActors(){
+        testButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                System.out.println("Button clicked");
+            }
+        });
+    }
 
     public void update(float dt){
         handleInput(dt);
@@ -30,10 +80,15 @@ public class Menu extends AbstractScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(1,  0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         update(delta);
+        stage.act(delta);
+        stage.draw();
     }
 
+    @Override
+    public void show(){
+        Gdx.input.setInputProcessor(stage);
+    }
 
     @Override
     public boolean keyDown(int keycode) {
