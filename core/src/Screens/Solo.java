@@ -16,28 +16,35 @@ import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
     private final SpriteBatch batch;
-    private final OrthographicCamera gamecam;
+    private OrthographicCamera gamecam;
 
-    private final Texture testImg;
+    private Texture testImg;
 
     private final Array<Rectangle> testNotes;
 
     public Solo(RhythmGame context) {
-        super(context);
-        batch = new SpriteBatch();
+        super(context); // receive cache context
+        batch = new SpriteBatch(); // create batch to store all our sprite objects
 
-        testImg = new Texture(Gdx.files.internal("gameGFX/triggers/downTrigger.png"));
+        createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
+        createTextures(); // load our image files into local variables
 
+        testNotes = new Array<Rectangle>(); // array of rectangle objects that will store each individual note
+        Rectangle testNote = new Rectangle(); // Rectangle object that will contain size info and hitboxes
+        testNote.x = 200; // position on x axis for each note
+        testNote.y = gamecam.viewportHeight + 12; // set to max y + a lil extra so it appears the notes spawn about the screen
+        testNote.width = 32; // define our note HITBOX width
+        testNote.height = 32; // define our note HITBOX height
+        testNotes.add(testNote); // put our note object in set of notes
+    }
+
+    public void createCamera(){
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+    }
 
-        testNotes = new Array<Rectangle>();
-        Rectangle testNote = new Rectangle();
-        testNote.x = 200;
-        testNote.y = gamecam.viewportHeight + 12;
-        testNote.width = 32;
-        testNote.height = 32;
-        testNotes.add(testNote);
+    public void createTextures(){
+        testImg = new Texture(Gdx.files.internal("gameGFX/triggers/downTrigger.png"));
     }
 
     public void handleInput(float dt){
@@ -59,13 +66,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 iter.remove();
             }
         }
-
         handleInput(dt);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 1, 0, 1);
+        Gdx.gl.glClearColor(.5f, .5f, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         update(delta);
