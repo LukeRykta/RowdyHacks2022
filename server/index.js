@@ -10,7 +10,9 @@ const _ = require('underscore')._;
   Global variable/arrays that will store important user data
   that will be used through many socket events.
 */
+//stores players by index
 let players = [];
+//stores players by their unique ID.
 let person = [];
 let rooms = [];
 
@@ -24,7 +26,6 @@ server.listen(3000, function(){
 
 /*
     Player connection triggers this event.
-
     When player connects these things should happen in order.
     1. index.js uses a check function to check if rooms array is empty. If rooms is empty, creates a new room and puts player in room.
     2. If rooms exist the array is checked from 0...i till a room with .private is set to false. Insert player into room, set room to private, game starts.
@@ -34,13 +35,15 @@ server.listen(3000, function(){
  */
 io.on('connection', function(socket){
     console.log("Player Connected!");
+    console.log(rooms.length);
+    socket.on("roomCheck", function(newPlayer) {
+        if(rooms.length === 0){
 
+        }else{
+            for(let i = 0; i < rooms.length; i++){
 
-
-
-
-
-
-
+            }
+        }
+    });
 
 });
