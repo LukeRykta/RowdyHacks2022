@@ -47,7 +47,8 @@ io.on('connection', function(socket){
     });
     /*
      roomCheck checks if rooms exist, if not, create a new room and store current
-     player
+     player. If rooms do exist then go through each room and check if they are set to private or not (full or not full).
+
      */
     socket.on("roomCheck", function(newPlayer) {
         if(rooms.length === 0){
@@ -56,18 +57,39 @@ io.on('connection', function(socket){
             let room = new Room(newPlayer, id, socket.id);
             rooms.push(room);
             //add room to socket and join the room.
-            socket.room = newPlayer.name;
+            socket.room = socket.id;
+           // console.log(socket.room);
             socket.join(socket.room);
 
             room.addPerson(socket.id);
             person[socket.id].inroom = true;
-        }else{
+        }else if(rooms.length !== 0){
             for(let i = 0; i < rooms.length; i++){
+                if(rooms[i].private === false){
+                    socket.room = rooms[i].id;
+                    socket.join(socket.room);
 
+                    rooms[i].addPerson(socket.id);
+                    person[socket.id].inroom = true
+                    rooms[i].private = true;
+                }
+            }
+            if(!person[socket.id].inroom){
+                let id = uuid.v4();
+                let room = new Room(newPlayer, id, socket.id);
+                rooms.push(room);
+                //add room to socket and join the room.
+                socket.room = socket.id;
+                socket.join(socket.room);
+
+                room.addPerson(socket.id);
+                person[socket.id].inroom = true;
             }
         }
         console.log("Length of room after create: " + rooms.length);
-        console.log(rooms[0]);
+        console.log(person[socket.id]);
+        console.log(rooms);
+
     });
 
 });
