@@ -1,11 +1,13 @@
 package Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import mygdx.game.RhythmGame;
 
 public class Solo extends AbstractScreen implements InputProcessor {
@@ -26,7 +28,13 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void handleInput(float dt){
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){
+            try {
+                context.setScreen(ScreenType.MENU);
+            } catch (ReflectionException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public void update(float dt){
