@@ -3,6 +3,7 @@ package Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,6 +28,8 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private Label nameInfo;
     private Skin skin;
 
+    protected Sound forwardSound;
+
     public Opening(RhythmGame context) {
         super(context);
         initMusic();
@@ -37,6 +40,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     public void initMusic(){
         music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
         //todo add sounds and start music here
+        forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
     }
 
     public void initSkin(){
@@ -78,17 +82,12 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     }
 
-    @Override
-    public void show(){
-        Gdx.input.setInputProcessor(stage);
-        music.play();
-    }
-
     public void handleInput(float dt) throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             RhythmGame.username = name.getText();
             try{
                 context.setScreen(ScreenType.MENU);
+                forwardSound.play();
             } catch (ReflectionException e){
                 e.printStackTrace();
             }
@@ -115,7 +114,14 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     @Override
+    public void show(){
+        Gdx.input.setInputProcessor(stage);
+        music.play();
+    }
+
+    @Override
     public void hide() {
+        music.stop();
         stage.dispose();
     }
 

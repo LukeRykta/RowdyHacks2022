@@ -101,6 +101,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void show(){
+        music.play();
         Gdx.input.setInputProcessor(stage);
     }
 
