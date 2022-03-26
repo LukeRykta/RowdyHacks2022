@@ -38,7 +38,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     public void initMusic(){
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/beat1.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/menu.mp3"));
         //todo add sounds and start music here
         forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
     }
