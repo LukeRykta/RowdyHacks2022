@@ -18,7 +18,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private final SpriteBatch batch;
     private OrthographicCamera gamecam;
 
-    private Texture testImg;
+    private Texture downArrow;
+    private Texture downTrigger;
 
     private final Array<Rectangle> testNotes;
 
@@ -44,7 +45,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void createTextures(){
-        testImg = new Texture(Gdx.files.internal("gameGFX/triggers/downTrigger.png"));
+        downArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
+        downTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
     }
 
     public void handleInput(float dt){
@@ -80,8 +82,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         batch.begin();
 
+        batch.draw(downTrigger, 200, 0); // down
         for(Rectangle testNote: testNotes)
-            batch.draw(testImg, testNote.x, testNote.y);
+            batch.draw(downArrow, testNote.x, testNote.y);
 
         //batch.draw(testImg, 100, 100);
         batch.end();
@@ -94,7 +97,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void dispose(){
-        testImg.dispose();
+        downArrow.dispose();
+        downTrigger.dispose();
         batch.dispose();
     }
 
