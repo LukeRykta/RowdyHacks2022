@@ -18,6 +18,7 @@ import java.util.EnumMap;
 
 public class RhythmGame extends Game {
 	private static final String TAG = RhythmGame.class.getSimpleName(); // get each screen name for logging when moving between screens
+	public static String username = "";
 	private EnumMap<ScreenType, AbstractScreen> screenCache; // defining our screenCache which will allow us to change screens without losing data
 	private FitViewport screenViewport; // define the ratio of our screen
 	SpriteBatch batch;
