@@ -68,7 +68,11 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
         final Table titleTable = new Table(skin); // table for header
         menuTable = new Table(skin); // table for menu buttons
-        final Table leaderTable = new Table(skin); // table for leaderboard results
+        final Table leaderTable = new Table(skin); // table for leaderboard results\
+
+        final Table backgroundTable = new Table(skin); // Table for background
+        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
+        backgroundTable.setFillParent(true);
 
         //initialize menuTable and title table sizes to scale with aspect ration
         menuTable.setWidth(stage.getWidth());
@@ -77,10 +81,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.setWidth(stage.getWidth());
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
-
-        final Table backgroundTable = new Table(skin); // Table for background
-        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
-        backgroundTable.setFillParent(true);
 
         title = new Label("RHYTHM GAME\n A game by <team name>", skin); // titleTable items
 
@@ -122,7 +122,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
-                            context.setScreen(ScreenType.LOADING);
+                            context.setScreen(ScreenType.SSEL);
                         } catch (ReflectionException e){
                             e.printStackTrace();
                         }
@@ -139,7 +139,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
-                            context.setScreen(ScreenType.MULTI);
+                            context.setScreen(ScreenType.MSEL);
                         } catch (ReflectionException e){
                             e.printStackTrace();
                         }
@@ -200,9 +200,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Keys.ENTER) && singleButton.hasKeyboardFocus()){
-            context.setScreen(ScreenType.LOADING);
+            context.setScreen(ScreenType.SSEL);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && multiButton.hasKeyboardFocus()){
-            context.setScreen(ScreenType.MULTI);
+            context.setScreen(ScreenType.MSEL);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && leaderButton.hasKeyboardFocus()){
             dialog.show(stage).setY(dialog.getHeight()/2);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && quitButton.hasKeyboardFocus()){
@@ -265,7 +265,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
-        music.stop();
+
     }
 
     @Override

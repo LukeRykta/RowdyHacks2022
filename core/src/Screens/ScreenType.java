@@ -7,6 +7,7 @@ public enum ScreenType {
     LOADING(Loading.class),
     MENU(Menu.class),
     SOLO(Solo.class),
+    LOCAL(LocalMulti.class),
     SSEL(SoloSelect.class),
     MSEL(MultiSelect.class),
     MULTI(Multiplayer.class);
