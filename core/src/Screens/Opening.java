@@ -166,7 +166,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(currentFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 128, 256, 256); // draw x and y position and scale size
+        batch.draw(currentFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
         batch.end();
 
         try {

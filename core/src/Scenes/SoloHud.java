@@ -12,17 +12,17 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import mygdx.game.RhythmGame;
 
-public class Hud implements Disposable {
+public class SoloHud implements Disposable {
     public Stage stage;
 
-    public static Integer score;
+    public static Integer score =0;
     private static Label scoreLabel;
     private static Label exclaimLabel;
     public static String exclaim = "start";
 
     Table table = new Table();
 
-    public Hud (SpriteBatch sb){
+    public SoloHud(SpriteBatch sb){
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         score = 0;
 
@@ -39,10 +39,6 @@ public class Hud implements Disposable {
         //table.row();
         table.add(exclaimLabel).expand();
         stage.addActor(table);
-    }
-
-    public static void addMulti(int value){
-
     }
 
     public static void addScore(int value){

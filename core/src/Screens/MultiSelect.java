@@ -96,7 +96,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     music.stop();
-                    context.setScreen(ScreenType.LOADING);
+                    context.setScreen(ScreenType.LOCAL);
                 } catch (ReflectionException e) {
                     e.printStackTrace();
 
@@ -110,7 +110,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y){
                 try{
                     music.stop();
-                    context.setScreen(ScreenType.LOADING);
+                    context.setScreen(ScreenType.LOCAL);
                 } catch (ReflectionException e) {
                     e.printStackTrace();
                 }
@@ -122,7 +122,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y){
                 try{
                     music.stop();
-                    context.setScreen(ScreenType.LOADING);
+                    context.setScreen(ScreenType.LOCAL);
                 } catch (ReflectionException e){
                     e.printStackTrace();
                 }
@@ -166,13 +166,13 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song1Button.hasKeyboardFocus()){
             music.stop();
-            context.setScreen(ScreenType.LOADING);
+            context.setScreen(ScreenType.LOCAL);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song2Button.hasKeyboardFocus()){
             music.stop();
-            context.setScreen(ScreenType.LOADING);
+            context.setScreen(ScreenType.LOCAL);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song3Button.hasKeyboardFocus()) {
             music.stop();
-            context.setScreen(ScreenType.LOADING);
+            context.setScreen(ScreenType.LOCAL);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && returnButton.hasKeyboardFocus()) {
             context.setScreen(ScreenType.MENU);
         }

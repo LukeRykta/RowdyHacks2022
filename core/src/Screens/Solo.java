@@ -1,6 +1,6 @@
 package Screens;
 
-import Scenes.Hud;
+import Scenes.SoloHud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
-    private Hud hud; // new hud overlay
+    private SoloHud hud; // new hud overlay
 
     private final SpriteBatch batch; // for drawing sprites
     private OrthographicCamera gamecam;
@@ -82,7 +82,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public Solo(RhythmGame context) throws InvalidMidiDataException, IOException {
         super(context); // receive cache context
         batch = new SpriteBatch(); // create batch to store all our sprite objects
-        hud = new Hud(batch); // add the batch to our hud so it can draw on our screen
+        hud = new SoloHud(batch); // add the batch to our hud so it can draw on our screen
 
         createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
 
@@ -167,19 +167,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         upTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/upP.png"));
         downTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/downP.png"));
         rightTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/rightP.png"));
-
-        blueDinoSheet = new Texture("uiGFX/texturepacks/blueDino.png"); // set file path for png
-        TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
-
-        TextureRegion[] runFrames = new TextureRegion[11];
-        int index = 0;
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 11; j++) {
-                runFrames[index++] = tmp[i][j];
-            }
-        }
-
-        runAnimation = new Animation<TextureRegion>(0.1f, runFrames);
     }
 
     public void createTriggers() {
@@ -247,21 +234,22 @@ public class Solo extends AbstractScreen implements InputProcessor {
             spawnRightNote();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { //left pressed
-            Hud.removeScore(100);
+            SoloHud.removeScore(100);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) { //up pressed
-            Hud.removeScore(100);
+            SoloHud.removeScore(100);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) { //down pressed
-            Hud.removeScore(100);
+            SoloHud.removeScore(100);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { //right pressed
-            Hud.removeScore(100);
+            SoloHud.removeScore(100);
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            if (Hud.score > 0){
-                RhythmGame.highScore = Hud.score;
+            if (SoloHud.score > 0){
+                RhythmGame.highScore = SoloHud.score;
             }
             try {
                 context.setScreen(ScreenType.MENU);
@@ -301,7 +289,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 @Override
                 public void run() {
                     i++;
-                    RhythmGame.highScore = Hud.score;
+                    RhythmGame.highScore = SoloHud.score;
                     try {
                         context.setScreen(ScreenType.MENU);
                     } catch (ReflectionException e) {
@@ -329,19 +317,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(100);
+                SoloHud.removeScore(100);
                 threshold = 0;
             }
             if(note.overlaps(triggerLR[3])) { // left trigger
                 if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                    Hud.addScore(200 * multiplier[index]);
+                    SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
-                }
-            } else if (!note.overlaps(triggerLR[3])){
-                if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                    threshold=0;
                 }
             }
         }
@@ -352,19 +336,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(100);
+                SoloHud.removeScore(100);
                 threshold = 0;
             }
             if(note.overlaps(triggerLR[2])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                    Hud.addScore(200 * multiplier[index]);
+                    SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
-                }
-            } else if (!note.overlaps(triggerLR[2])){
-                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                    threshold=0;
                 }
             }
         }
@@ -375,19 +355,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(100);
+                SoloHud.removeScore(100);
                 threshold = 0;
             }
             if(note.overlaps(triggerLR[1])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                    Hud.addScore(200 * multiplier[index]);
+                    SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
-                }
-            } else if (!note.overlaps(triggerLR[1])){
-                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                    threshold=0;
                 }
             }
         }
@@ -398,19 +374,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(100);
+                SoloHud.removeScore(100);
                 threshold = 0;
             }
             if(note.overlaps(triggerLR[0])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                    Hud.addScore(200 * multiplier[index]);
+                    SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
-                }
-            } else if (!note.overlaps(triggerLR[0])){
-                if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                    threshold=0;
                 }
             }
         }
@@ -420,8 +392,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stateTime+=delta;
-        TextureRegion currentFrame = (TextureRegion) runAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
 
         hud.update(delta);
         hud.stage.draw();
@@ -429,8 +399,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
-
-        batch.draw(currentFrame, stage.getWidth() / 4, stage.getHeight()/2 - 16, 32, 32); // draw x and y position and scale size
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             batch.draw(leftTriggerP, triggerLR[3].x, triggerLR[3].y);
