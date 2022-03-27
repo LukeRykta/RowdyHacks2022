@@ -228,7 +228,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(.5f, .5f, 1, 1);
+        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         hud.update(delta);

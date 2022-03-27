@@ -71,7 +71,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
 
-        title = new Label("RHYTHM GAME\n A game by Brandonio and Luke", skin); // titleTable items
+        title = new Label("RHYTHM GAME\n A game by <team name>", skin); // titleTable items
 
         singleButton = new TextButton("Singleplayer", skin); // menuTable items
         multiButton = new TextButton("Multiplayer", skin);
@@ -110,7 +110,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
-                            context.setScreen(ScreenType.SOLO);
+                            context.setScreen(ScreenType.LOADING);
                         } catch (ReflectionException e){
                             e.printStackTrace();
                         }
@@ -185,9 +185,27 @@ public class Menu extends AbstractScreen implements InputProcessor {
         }
     }
 
+    public void handleEnter() throws ReflectionException {
+        if (Gdx.input.isKeyJustPressed(Keys.ENTER) && singleButton.hasKeyboardFocus()){
+            context.setScreen(ScreenType.LOADING);
+        } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && multiButton.hasKeyboardFocus()){
+            context.setScreen(ScreenType.MULTI);
+        } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && leaderButton.hasKeyboardFocus()){
+            dialog.show(stage).setY(dialog.getHeight()/2);
+        } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && quitButton.hasKeyboardFocus()){
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Gdx.app.exit();
+                }
+            },0.8f);
+        }
 
-    public void handleInput(float dt){
+    }
+
+    public void handleInput(float dt) throws ReflectionException {
         getFocus();
+        handleEnter();
 
         if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
             try {
@@ -202,7 +220,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         }
     }
 
-    public void update(float dt){
+    public void update(float dt) throws ReflectionException {
         handleInput(dt);
     }
 
@@ -213,7 +231,11 @@ public class Menu extends AbstractScreen implements InputProcessor {
         }
         Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        update(delta);
+        try {
+            update(delta);
+        } catch (ReflectionException e) {
+            e.printStackTrace();
+        }
         stage.act(delta);
         stage.draw();
         //FIXME Menu button navigation
