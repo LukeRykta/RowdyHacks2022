@@ -44,6 +44,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private OrthographicCamera cam;
     private Stage stage;
     private Skin skin;
+    private boolean isMenuInit = false;
 
     private TextButton singleButton;
     private TextButton multiButton;
@@ -66,7 +67,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
         super(context);
         createCamera();
         initSkin();
-        initStage();
         initMusic();
     }
 
@@ -169,6 +169,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
         dialog = new Dialog("Leaderboard", skin, "dialog-modal");
         dialog.background("window");
 
+        if (dialog != null) {
+            dialog.removeActor(leaderTable);
+        }
         getLeaderboard();
         for (int i = 0; i < 20; i++) {
             if (names[i] == null){

@@ -48,7 +48,7 @@ public class RhythmGame extends Game {
 		manager.finishLoading();
 
 		try {
-			setScreen(ScreenType.OPENING); // attempt to set screen to our menu (this will create a new screen if it's null)
+			setScreen(ScreenType.SOLO); // attempt to set screen to our menu (this will create a new screen if it's null)
 		} catch (ReflectionException e) {
 			e.printStackTrace();
 		}

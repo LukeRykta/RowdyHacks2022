@@ -8,11 +8,15 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import mygdx.game.RhythmGame;
 
 import javax.sound.midi.*;
@@ -25,6 +29,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     private final SpriteBatch batch; // for drawing sprites
     private OrthographicCamera gamecam;
+    private Stage stage;
 
     private final float[] worldCenterXY = new float [2]; // stores x and y values for world center for easy referencing
     private final float[] trigPos = {1, 1.33f, 2, 4}; // relative positions for each lane (triggers / arrows)
@@ -61,6 +66,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private Texture downTriggerP;
     private Texture rightTriggerP;
 
+    private Animation runAnimation; // animation key frames
+    private Texture blueDinoSheet; // loaded image sheet (png)
+    private float stateTime=0;
+
     private final Rectangle[] triggerLR = new Rectangle[4]; // each element represents a trigger
 
     private Array<Rectangle> leftNotes;
@@ -76,6 +85,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         hud = new Hud(batch); // add the batch to our hud so it can draw on our screen
 
         createCamera(); // create Orthographic Camera and set it to our vwidth vheight that we declared in driver
+
+        stage = new Stage (new ScreenViewport());
 
         worldCenterXY[0] = gamecam.viewportWidth / 2; // find the x center of our cam
         worldCenterXY[1] = gamecam.viewportHeight / 2; // find the y center of our cam
@@ -156,6 +167,19 @@ public class Solo extends AbstractScreen implements InputProcessor {
         upTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/upP.png"));
         downTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/downP.png"));
         rightTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/rightP.png"));
+
+        blueDinoSheet = new Texture("uiGFX/texturepacks/blueDino.png"); // set file path for png
+        TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
+
+        TextureRegion[] runFrames = new TextureRegion[11];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < 11; j++) {
+                runFrames[index++] = tmp[i][j];
+            }
+        }
+
+        runAnimation = new Animation<TextureRegion>(0.1f, runFrames);
     }
 
     public void createTriggers() {
@@ -280,8 +304,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+                    i++;
+                    RhythmGame.highScore = Hud.score;
                     try {
-                        i++;
                         context.setScreen(ScreenType.MENU);
                     } catch (ReflectionException e) {
                         e.printStackTrace();
@@ -383,6 +408,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stateTime+=delta;
+        TextureRegion currentFrame = (TextureRegion) runAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
 
         hud.update(delta);
         hud.stage.draw();
@@ -390,6 +417,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
+
+        batch.draw(currentFrame, stage.getWidth() / 4, stage.getHeight()/2 - 16, 32, 32); // draw x and y position and scale size
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             batch.draw(leftTriggerP, triggerLR[3].x, triggerLR[3].y);
@@ -424,11 +453,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
             batch.draw(downArrow, downNote.x, downNote.y);
         for(Rectangle rightNote: rightNotes)
             batch.draw(rightArrow, rightNote.x, rightNote.y);
-
-        //batch.draw(testImg, 100, 100);
         batch.end();
 
         batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
         update(delta);
     }
 
