@@ -51,6 +51,8 @@ public class Multiplayer extends AbstractScreen {
             }
             socket.emit("storePlayer", newPlayer);
             socket.emit("roomCheck", newPlayer);
+        }).on("gameStart", args -> {
+
         });
 
     }
@@ -72,7 +74,7 @@ public class Multiplayer extends AbstractScreen {
 
     @Override
     public void pause() {
-        super.pause();
+
     }
 
     @Override

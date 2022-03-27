@@ -72,6 +72,8 @@ io.on('connection', function(socket){
                     rooms[i].addPerson(socket.id);
                     person[socket.id].inroom = true
                     rooms[i].private = true;
+
+                    socket.emit("gameStart", newPlayer);
                 }
             }
             if(!person[socket.id].inroom){
