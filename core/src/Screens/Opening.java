@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -31,8 +29,10 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private OrthographicCamera cam;
     private Stage stage;
 
-    private Animation runAnimation; // animation key frames
+    private Animation blueAnimation; // animation key frames
+    private Animation greenAnimation; // animation key frames
     private Texture blueDinoSheet; // loaded image sheet (png)
+    private Texture greenDinoSheet; // loaded image sheet (png)
 
     private TextField name;
     private boolean canPress = false;
@@ -46,8 +46,10 @@ public class Opening extends AbstractScreen implements InputProcessor {
     float stateTime;
 
     private Texture blueDino;
+    private Texture greenDino;
 
     protected Sound forwardSound;
+    private int t;
 
     public Opening(RhythmGame context) {
         super(context);
@@ -72,17 +74,23 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     public void initTextures(){
         blueDinoSheet = new Texture("uiGFX/texturepacks/blueDino.png"); // set file path for png
+        greenDinoSheet = new Texture("uiGFX/texturepacks/greenDino.png"); // set file path for png
         TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
+        TextureRegion[][] tmp2 = TextureRegion.split(greenDinoSheet, greenDinoSheet.getWidth() / 24, greenDinoSheet.getHeight()); // declare region size
 
-        TextureRegion[] runFrames = new TextureRegion[11];
+        TextureRegion[] blueFrames = new TextureRegion[11];
+        TextureRegion[] greenFrames = new TextureRegion[11];
         int index = 0;
         for (int i = 0; i < 1; i++) {
             for (int j = 0; j < 11; j++) {
-                runFrames[index++] = tmp[i][j];
+                blueFrames[index] = tmp[i][j];
+                greenFrames[index] = tmp2[i][j];
+                index++;
             }
         }
 
-        runAnimation = new Animation<TextureRegion>(0.1f, runFrames);
+        blueAnimation = new Animation<TextureRegion>(0.1f, blueFrames);
+        greenAnimation = new Animation<TextureRegion>(0.1f, greenFrames);
     }
 
     public void initSkin(){
@@ -157,8 +165,12 @@ public class Opening extends AbstractScreen implements InputProcessor {
         //Gdx.gl.glClearColor(0x38,  0x95, 0xF7, 1/4); //blue
         //Gdx.gl.glClearColor(0xF5,  0xB0, 0x3E, 1/4); //orange
         stateTime += delta;
-        TextureRegion currentFrame = (TextureRegion) runAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
+        TextureRegion currentBFrame = (TextureRegion) blueAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
+        TextureRegion currentGFrame = (TextureRegion) greenAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
 
+        if (!currentGFrame.isFlipX()) {
+            currentGFrame.flip(true, false);
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //stage.act(delta);
         stage.draw();
@@ -166,7 +178,8 @@ public class Opening extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(currentFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
+        batch.draw(currentBFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
+        batch.draw(currentGFrame, stage.getWidth() / 1.8f + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
         batch.end();
 
         try {
