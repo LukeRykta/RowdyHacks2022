@@ -35,6 +35,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
     private Sound forwardSound;
     private Sound nextSound;
     private Sound backSound;
+    private Sound popSound;
 
     public SoloSelect(RhythmGame context) {
         super(context);
@@ -47,6 +48,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         music = manager.get("music/songs/menu.mp3");
         forwardSound = manager.get("music/sounds/forward.wav");
         backSound = manager.get("music/sounds/back.wav");
+        popSound = manager.get("music/sounds/fx10.mp3");
         //nextSound = manager.get("music/sounds/next.wav");
     }
 
@@ -69,9 +71,9 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         menuTable.align(Align.center|Align.top);
         menuTable.setPosition(0, Gdx.graphics.getHeight());
 
-        song1Button = new TextButton("Song1", skin); // menuTable items
-        song2Button = new TextButton("Song2", skin);
-        song3Button = new TextButton ("Song3", skin);
+        song1Button = new TextButton("Rowdy", skin); // menuTable items
+        song2Button = new TextButton("Star", skin);
+        song3Button = new TextButton ("Jump", skin);
         returnButton = new TextButton("Back", skin);
 
         menuTable.row();
@@ -94,7 +96,9 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         song1Button.addListener(new ClickListener(){ // singleplayer
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                RhythmGame.songname = "rowdy";
                 try {
+                    forwardSound.play();
                     music.stop();
                     context.setScreen(ScreenType.LOADING);
                 } catch (ReflectionException e) {
@@ -107,18 +111,14 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         song2Button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                Timer.schedule(new Timer.Task() {
-
-                    @Override
-                    public void run() {
-                        try{
-                            music.stop();
-                            context.setScreen(ScreenType.LOADING);
-                        } catch (ReflectionException e){
-                            e.printStackTrace();
-                        }
-                    }
-                },0);
+                RhythmGame.songname = "star";
+                try{
+                    forwardSound.play();
+                    music.stop();
+                    context.setScreen(ScreenType.LOADING);
+                } catch (ReflectionException e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -126,10 +126,10 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 Timer.schedule(new Timer.Task() {
-
                     @Override
                     public void run() {
                         try{
+                            forwardSound.play();
                             music.stop();
                             context.setScreen(ScreenType.LOADING);
                         } catch (ReflectionException e){
@@ -147,6 +147,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
                     @Override
                     public void run() {
+                        backSound.play();
                         try{
                             context.setScreen(ScreenType.MENU);
                         } catch (ReflectionException e){
@@ -160,37 +161,51 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
     public void getFocus() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song1Button.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(song2Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song2Button.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(song3Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song3Button.hasKeyboardFocus()) {
+            popSound.play();
             stage.setKeyboardFocus(returnButton);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && returnButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(song1Button);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song1Button.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(returnButton);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song2Button.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(song1Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song3Button.hasKeyboardFocus()) {
+            popSound.play();
             stage.setKeyboardFocus(song2Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && returnButton.hasKeyboardFocus()) {
+            popSound.play();
             stage.setKeyboardFocus(song3Button);
         }
     }
 
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song1Button.hasKeyboardFocus()){
+            RhythmGame.songname = "rowdy";
+            forwardSound.play();
             music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song2Button.hasKeyboardFocus()){
+            RhythmGame.songname = "star";
+            forwardSound.play();
             music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song3Button.hasKeyboardFocus()) {
+            forwardSound.play();
             music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && returnButton.hasKeyboardFocus()) {
+            backSound.play();
             context.setScreen(ScreenType.MENU);
         }
     }

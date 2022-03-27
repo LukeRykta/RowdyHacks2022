@@ -35,9 +35,9 @@ public class SoloHud implements Disposable {
         scoreLabel = new Label(String.format("%06d", score), skin);
         exclaimLabel = new Label(String.format("%s", exclaim), skin);
 
-        table.add(scoreLabel).expandX();
+        table.add(scoreLabel).expandX().top();
         //table.row();
-        table.add(exclaimLabel).expand();
+        table.add(exclaimLabel).expand().top();
         stage.addActor(table);
     }
 

@@ -46,9 +46,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     float stateTime;
 
-    private Texture blueDino;
-    private Texture greenDino;
-
     protected Sound forwardSound;
     private int t;
 
@@ -149,10 +146,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
             } catch (ReflectionException e){
                 e.printStackTrace();
             }
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.B)){
-            b++;
         }
     }
 

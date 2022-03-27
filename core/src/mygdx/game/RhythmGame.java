@@ -28,6 +28,7 @@ public class RhythmGame extends Game {
 
 	public static String username = "";
 	public static int highScore = 0;
+	public static String songname ="rowdy";
 
 	public static int V_WIDTH = 400; // use vwidth and vheight for scaling sprites and screens
 	public static int V_HEIGHT = 208;
@@ -41,9 +42,11 @@ public class RhythmGame extends Game {
 		manager.load("music/songs/menu.mp3", Music.class);
 		manager.load("music/songs/star.mp3", Music.class);
 		manager.load("music/songs/song1.mp3", Music.class);
-		//manager.load("music/sounds/fx3.wav", Sound.class);
+
 		manager.load("music/sounds/back.wav", Sound.class);
 		manager.load("music/sounds/forward.wav", Sound.class);
+		manager.load("music/sounds/fx10.mp3", Sound.class);
+		manager.load("music/sounds/fx11.mp3", Sound.class);
 		manager.load("music/sounds/next.wav", Sound.class);
 		manager.finishLoading();
 

@@ -54,6 +54,18 @@ public class LocalHud implements Disposable {
         }
         leftScoreLabel.setText(String.format("%06d", leftscore));
     }
+    public static void RaddScore(int value){
+        rightscore += value;
+        rightScoreLabel.setText(String.format("%06d", rightscore));
+    }
+
+    public static void RremoveScore(int value){
+        rightscore -= value;
+        if (rightscore < 0){
+            rightscore = 0;
+        }
+        rightScoreLabel.setText(String.format("%06d", rightscore));
+    }
 
     @Override
     public void dispose() {

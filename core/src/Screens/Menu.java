@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -48,12 +49,17 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private boolean isMenuInit = false;
     private SpriteBatch batch;
     private Texture grass;
+    private Animation redAnimation; // animation key frames
+    private Texture redDinoSheet; // loaded image sheet (png)
+    float stateTime;
+    private int scroll=0;
 
     private TextButton singleButton;
     private TextButton multiButton;
     private TextButton quitButton;
     private TextButton leaderButton;
     private static Dialog dialog;
+    private static Dialog dialog2;
     private Label title;
 
     private Table menuTable;
@@ -62,6 +68,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Sound forwardSound;
     private Sound nextSound;
     private Sound backSound;
+    private Sound popSound;
+    private Sound onSound;
+
+    int b =0;
 
     static String[] names = new String[1000];
     static int[] scores = new int[1000];
@@ -82,6 +92,19 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     public void createTextures(){
         grass = new Texture(Gdx.files.internal("jungletile/jungle.png"));
+        grass.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        redDinoSheet = new Texture("uiGFX/texturepacks/redDino.png"); // set file path for png
+        TextureRegion[][] tmp = TextureRegion.split(redDinoSheet, redDinoSheet.getWidth() / 24, redDinoSheet.getHeight()); // declare region size
+
+        TextureRegion[] redFrames = new TextureRegion[7];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 17; j < 24; j++) {
+                redFrames[index++] = tmp[i][j];
+            }
+        }
+
+        redAnimation = new Animation<TextureRegion>(0.1f, redFrames);
     }
 
     private void getLeaderboard(){
@@ -129,6 +152,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
         music = manager.get("music/songs/menu.mp3");
         forwardSound = manager.get("music/sounds/forward.wav");
         backSound = manager.get("music/sounds/back.wav");
+        popSound = manager.get("music/sounds/fx10.mp3");
+        onSound = manager.get("music/sounds/fx11.mp3");
         //nextSound = manager.get("music/sounds/next.wav");
     }
 
@@ -142,7 +167,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
         final Table titleTable = new Table(skin); // table for header
         menuTable = new Table(skin); // table for menu buttons
-        final Table leaderTable = new Table(skin); // table for leaderboard results\
+        final Table leaderTable = new Table(skin); // table for leaderboard results
 
         final Table backgroundTable = new Table(skin); // Table for background
         backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
@@ -175,11 +200,18 @@ public class Menu extends AbstractScreen implements InputProcessor {
         menuTable.row();
         menuTable.add(quitButton);
 
-        dialog = new Dialog("Leaderboard", skin, "dialog-modal");
+        dialog = new Dialog("Rowdy Leaderboard", skin, "dialog-modal");
+
         dialog.background("window");
+
+        dialog2 = new Dialog("Star", skin, "dialog-modal");
+        dialog2.background("window");
 
         if (dialog != null) {
             dialog.removeActor(leaderTable);
+        }
+        if (dialog2 != null) {
+            dialog2.removeActor(leaderTable);
         }
         getLeaderboard();
         for (int i = 0; i < 20; i++) {
@@ -214,6 +246,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
+                            forwardSound.play();
                             context.setScreen(ScreenType.SSEL);
                         } catch (ReflectionException e){
                             e.printStackTrace();
@@ -231,6 +264,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
+                            forwardSound.play();
                             context.setScreen(ScreenType.MSEL);
                         } catch (ReflectionException e){
                             e.printStackTrace();
@@ -243,6 +277,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         leaderButton.addListener(new ClickListener(){ // leaderboard
             @Override
             public void clicked(InputEvent event, float x, float y){
+                forwardSound.play();
                 dialog.show(stage).setY(dialog.getHeight()/2);
                 Timer.schedule(new Timer.Task() {
 
@@ -270,32 +305,43 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     public void getFocus() {
         if (Gdx.input.isKeyJustPressed(Keys.DOWN) && singleButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(multiButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && multiButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(leaderButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && leaderButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(quitButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && quitButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(singleButton);
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.UP) && singleButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(quitButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.UP) && multiButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(singleButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.UP) && leaderButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(multiButton);
         } else if (Gdx.input.isKeyJustPressed(Keys.UP) && quitButton.hasKeyboardFocus()){
+            popSound.play();
             stage.setKeyboardFocus(leaderButton);
         }
     }
 
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Keys.ENTER) && singleButton.hasKeyboardFocus()){
+            forwardSound.play();
             context.setScreen(ScreenType.SSEL);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && multiButton.hasKeyboardFocus()){
+            forwardSound.play();
             context.setScreen(ScreenType.MSEL);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && leaderButton.hasKeyboardFocus()){
+            forwardSound.play();
             dialog.show(stage).setY(dialog.getHeight()/2);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && quitButton.hasKeyboardFocus()){
             Timer.schedule(new Timer.Task() {
@@ -313,15 +359,12 @@ public class Menu extends AbstractScreen implements InputProcessor {
         getFocus();
         handleEnter();
 
-        if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
-            try {
-                context.setScreen(ScreenType.SOLO);
-            } catch (ReflectionException e){
-                e.printStackTrace();
-            }
+        if (Gdx.input.isKeyPressed(Keys.B)){
+            b--;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            backSound.play();
             dialog.hide();
         }
     }
@@ -332,11 +375,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        if (Gdx.input.isKeyJustPressed(Keys.ENTER)){
-            //todo add trigger event for pressing enter on a button
-        }
-        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        stateTime += delta;
+        TextureRegion currentFrame = (TextureRegion) redAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
 
         try {
             update(delta);
@@ -349,7 +391,11 @@ public class Menu extends AbstractScreen implements InputProcessor {
         stage.draw();
 
         batch.begin();
-        batch.draw(grass, 0, 0, stage.getWidth(), 300);
+        batch.draw(grass, scroll-=5, 0, stage.getWidth()*3, 300);
+        if (scroll < -2*(stage.getWidth())){
+            scroll = 0;
+        }
+        batch.draw(currentFrame, stage.getWidth() / 7, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
         batch.end();
     }
 

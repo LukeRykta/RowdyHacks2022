@@ -33,8 +33,7 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
 
     private final float[] worldCenterXY = new float [2]; // stores x and y values for world center for easy referencing
     private final float[] LtrigPos = {1.33f, 1.85f, 3, 8}; // relative positions for each lane (triggers / arrows)
-    private final float[] RtrigPos = {1.26f, 1.47f, 1.66f, 1.87f}; // relative positions for each lane (triggers / arrows)
-
+    private final float[] RtrigPos = {1.87f, 1.66f, 1.47f, 1.26f}; // relative positions for each lane (triggers / arrows)
     public static final int NOTE_ON = 0x90; // midi stuff
     public static final int NOTE_OFF = 0x80;
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
@@ -78,6 +77,11 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
     private Array<Rectangle> upNotes;
     private Array<Rectangle> downNotes;
     private Array<Rectangle> rightNotes;
+
+    private Array<Rectangle> leftNotes2;
+    private Array<Rectangle> upNotes2;
+    private Array<Rectangle> downNotes2;
+    private Array<Rectangle> rightNotes2;
 
     private int i = 0;
 
@@ -191,39 +195,66 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
 
     public void spawnLeftNote() {
         Rectangle leftNote= new Rectangle(); // Rectangle object that will contain size info and hitboxes
-        leftNote.x = worldCenterXY[0] / 4 - 16; // position on x axis for each note
+        leftNote.x = worldCenterXY[0] / 8 - 16; // position on x axis for each note
         leftNote.y = gamecam.viewportHeight + 12; // set to max y + a lil extra so it appears the notes spawn about the screen
         leftNote.width = 32; // define our note HITBOX width
         leftNote.height = 32; // define our note HITBOX height
         leftNotes.add(leftNote); // put our note object in set of notes
+
+        Rectangle leftNote2= new Rectangle(); // Rectangle object that will contain size info and hitboxes
+        leftNote2.x = worldCenterXY[0] * 1.26f - 16; // position on x axis for each note
+        leftNote2.y = gamecam.viewportHeight + 12; // set to max y + a lil extra so it appears the notes spawn about the screen
+        leftNote2.width = 32; // define our note HITBOX width
+        leftNote2.height = 32; // define our note HITBOX height
+        leftNotes.add(leftNote2); // put our note object in set of notes
     }
 
     public void spawnUpNote() {
         Rectangle upNote = new Rectangle();
-        upNote.x = worldCenterXY[0] / 2- 16;
+        upNote.x = worldCenterXY[0] / 3 - 16;
         upNote.y = gamecam.viewportHeight + 12;
         upNote.width = 32;
         upNote.height = 32;
         upNotes.add(upNote);
 
+        Rectangle upNote2 = new Rectangle();
+        upNote2.x = worldCenterXY[0] * 1.47f- 16;
+        upNote2.y = gamecam.viewportHeight + 12;
+        upNote2.width = 32;
+        upNote2.height = 32;
+        upNotes.add(upNote2);
     }
 
     public void spawnDownNote() {
         Rectangle downNote= new Rectangle();
-        downNote.x = worldCenterXY[0] / 1.33f - 16;
+        downNote.x = worldCenterXY[0] / 1.85f - 16;
         downNote.y = gamecam.viewportHeight + 12;
         downNote.width = 32;
         downNote.height = 32;
         downNotes.add(downNote);
+
+        Rectangle downNote2= new Rectangle();
+        downNote2.x = worldCenterXY[0] * 1.66f - 16;
+        downNote2.y = gamecam.viewportHeight + 12;
+        downNote2.width = 32;
+        downNote2.height = 32;
+        downNotes.add(downNote2);
     }
 
     public void spawnRightNote() {
         Rectangle rightNote= new Rectangle();
-        rightNote.x = worldCenterXY[0] * 1 - 16;
+        rightNote.x = worldCenterXY[0] / 1.33f - 16;
         rightNote.y = gamecam.viewportHeight + 12;
         rightNote.width = 32;
         rightNote.height = 32;
         rightNotes.add(rightNote);
+
+        Rectangle rightNote2= new Rectangle();
+        rightNote2.x = worldCenterXY[0] * 1.87f - 16;
+        rightNote2.y = gamecam.viewportHeight + 12;
+        rightNote2.width = 32;
+        rightNote2.height = 32;
+        rightNotes.add(rightNote2);
     }
 
     public void createNoteArrays(){
@@ -231,18 +262,14 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
         upNotes = new Array<Rectangle>();
         leftNotes = new Array<Rectangle>();
         rightNotes = new Array<Rectangle>();
+
+        downNotes2 = new Array<Rectangle>(); // array of rectangle objects that will store each individual note
+        upNotes2 = new Array<Rectangle>();
+        leftNotes2 = new Array<Rectangle>();
+        rightNotes2 = new Array<Rectangle>();
     }
 
     public void handleInput(float dt){
-        if(Gdx.input.isKeyJustPressed(Input.Keys.A) )
-            spawnLeftNote();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.W))
-            spawnUpNote();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.S) )
-            spawnDownNote();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.D) )
-            spawnRightNote();
-
         if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { //left pressed
             LocalHud.LremoveScore(100);
         }
@@ -254,7 +281,19 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { //right pressed
             LocalHud.LremoveScore(100);
+        }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.A)) { //left pressed
+            LocalHud.RremoveScore(100);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W)) { //up pressed
+            LocalHud.RremoveScore(100);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.S)) { //down pressed
+            LocalHud.RremoveScore(100);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.D)) { //right pressed
+            LocalHud.RremoveScore(100);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -270,7 +309,6 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
     }
 
     public void update(float dt){
-        handleInput(dt); // handles other inputs
 
         long updateT = System.currentTimeMillis(); // gets time at this cycle
 
@@ -305,18 +343,107 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
             }, 1f);
         }
 
-        iterHandle(dt); // checks to see if player pressed buttons at the right time
+        iterHandle1(dt); // checks to see if player pressed buttons at the right time
+        iterHandle2(dt); // checks to see if player pressed buttons at the right time
         hud.update(dt);
+        handleInput(dt); // handles other inputs
     }
 
-    public void iterHandle(float dt){
-        System.out.println(threshold);
-        if(threshold >= 10 && threshold <= 29)
+    private void iterHandle2(float dt) {
+        if(threshold >= 10 && threshold <= 29) {
             index = 1;
-        else if(threshold >= 30 && threshold <= 44)
+        }
+        else if(threshold >= 30 && threshold <= 44) {
             index = 2;
-        else if(threshold >= 45)
+        }
+        else if(threshold >= 45) {
             index = 3;
+        }
+        //RIGHT NOTES
+        for (Iterator<Rectangle> iter = leftNotes2.iterator(); iter.hasNext();) {
+            Rectangle note2 = iter.next(); // create note for each existing object in notes
+            note2.y -= 200 * dt;
+
+            if (note2.y + 64 < 0){ // if note goes below screen view, remove
+                iter.remove();
+                LocalHud.RremoveScore(100);
+                threshold = 0;
+            }
+            if(note2.overlaps(RtriggerLR[0])) { // left trigger
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                    LocalHud.RaddScore(200 * multiplier[index]);
+                    threshold += 1;
+                    iter.remove();
+                }
+            }
+        }
+
+        for (Iterator<Rectangle> iter = upNotes2.iterator(); iter.hasNext();) {
+            Rectangle note2 = iter.next(); // create note for each existing object in notes
+            note2.y -= 200* dt;
+
+            if (note2.y + 64 < 0){ // if note goes below screen view, remove
+                iter.remove();
+                LocalHud.RremoveScore(100);
+                threshold = 0;
+            }
+            if(note2.overlaps(RtriggerLR[1])) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+                    LocalHud.RaddScore(200 * multiplier[index]);
+                    threshold += 1;
+                    iter.remove();
+                }
+            }
+        }
+
+        for (Iterator<Rectangle> iter = downNotes2.iterator(); iter.hasNext();) {
+            Rectangle note2 = iter.next(); // create note for each existing object in notes
+            note2.y -= 200 * dt;
+
+            if (note2.y + 64 < 0){ // if note goes below screen view, remove
+                iter.remove();
+                LocalHud.RremoveScore(100);
+                threshold = 0;
+            }
+            if(note2.overlaps(RtriggerLR[2])) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+                    LocalHud.RaddScore(200 * multiplier[index]);
+                    threshold += 1;
+                    iter.remove();
+                }
+            }
+        }
+
+        for (Iterator<Rectangle> iter = rightNotes2.iterator(); iter.hasNext();) {
+            Rectangle note2 = iter.next(); // create note for each existing object in notes
+            note2.y -= 200 * dt;
+
+            if (note2.y + 64 < 0){ // if note goes below screen view, remove
+                iter.remove();
+                LocalHud.RremoveScore(100);
+                threshold = 0;
+            }
+            if(note2.overlaps(RtriggerLR[3])) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+                    LocalHud.RaddScore(200 * multiplier[index]);
+                    threshold += 1;
+                    iter.remove();
+                }
+            }
+        }
+    }
+
+    public void iterHandle1(float dt){
+        if(threshold >= 10 && threshold <= 29) {
+            index = 1;
+        }
+        else if(threshold >= 30 && threshold <= 44) {
+            index = 2;
+        }
+        else if(threshold >= 45) {
+            index = 3;
+        }
+
         for (Iterator<Rectangle> iter = leftNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
             note.y -= 200 * dt;
@@ -330,7 +457,6 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     LocalHud.LaddScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -349,7 +475,6 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                     LocalHud.LaddScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -368,7 +493,6 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
                     LocalHud.LaddScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -387,7 +511,6 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
                     LocalHud.LaddScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -426,35 +549,45 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
         else
             batch.draw(rightTrigger, LtriggerLR[0].x, LtriggerLR[0].y); // right
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            batch.draw(leftTriggerP, RtriggerLR[3].x, RtriggerLR[3].y);
+        //right side
+        if (Gdx.input.isKeyPressed(Input.Keys.A))
+            batch.draw(leftTriggerP, RtriggerLR[0].x, RtriggerLR[0].y);
         else
-            batch.draw(leftTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // left
+            batch.draw(leftTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // left
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP))
-            batch.draw(upTriggerP, RtriggerLR[2].x, RtriggerLR[2].y);
+        if (Gdx.input.isKeyPressed(Input.Keys.W))
+            batch.draw(upTriggerP, RtriggerLR[1].x, RtriggerLR[1].y);
         else
-            batch.draw(upTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // up
+            batch.draw(upTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // up
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            batch.draw(downTriggerP, RtriggerLR[1].x, RtriggerLR[1].y);
+        if (Gdx.input.isKeyPressed(Input.Keys.S))
+            batch.draw(downTriggerP, RtriggerLR[2].x, RtriggerLR[2].y);
         else
-            batch.draw(downTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // down
+            batch.draw(downTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // down
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            batch.draw(rightTriggerP, RtriggerLR[0].x, RtriggerLR[0].y);
+        if (Gdx.input.isKeyPressed(Input.Keys.D))
+            batch.draw(rightTriggerP, RtriggerLR[3].x, RtriggerLR[3].y);
         else
-            batch.draw(rightTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // right
+            batch.draw(rightTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // right
 
         batch.draw(leftTrigger, LtriggerLR[3].x, LtriggerLR[3].y); // left
         batch.draw(upTrigger, LtriggerLR[2].x, LtriggerLR[2].y); // up
         batch.draw(downTrigger, LtriggerLR[1].x, LtriggerLR[1].y); // down
         batch.draw(rightTrigger, LtriggerLR[0].x, LtriggerLR[0].y); // right
 
-        batch.draw(leftTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // left
-        batch.draw(upTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // up
-        batch.draw(downTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // down
-        batch.draw(rightTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // right
+        batch.draw(leftTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // left
+        batch.draw(upTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // up
+        batch.draw(downTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // down
+        batch.draw(rightTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // right
+
+        for(Rectangle leftNote2: leftNotes2)
+            batch.draw(leftArrow, leftNote2.x, leftNote2.y);
+        for(Rectangle upNote2: upNotes2)
+            batch.draw(upArrow, upNote2.x, upNote2.y);
+        for(Rectangle downNote2: downNotes2)
+            batch.draw(downArrow, downNote2.x, downNote2.y);
+        for(Rectangle rightNote2: rightNotes2)
+            batch.draw(rightArrow, rightNote2.x, rightNote2.y);
 
         for(Rectangle leftNote: leftNotes)
             batch.draw(leftArrow, leftNote.x, leftNote.y);
@@ -464,6 +597,7 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
             batch.draw(downArrow, downNote.x, downNote.y);
         for(Rectangle rightNote: rightNotes)
             batch.draw(rightArrow, rightNote.x, rightNote.y);
+
         batch.end();
 
         batch.setProjectionMatrix(hud.stage.getCamera().combined);

@@ -50,6 +50,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private final long startT;
 
     private Music song;
+    private Music song2;
 
     private Texture leftArrow; // arrow imgs
     private Texture upArrow;
@@ -102,11 +103,20 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     public void initMusic(){
         song = manager.get("music/songs/song1.mp3");
+        song2 = manager.get("music/songs/star.mp3");
     }
 
     public void parseMidi() throws InvalidMidiDataException, IOException {
-        Sequence sequence = MidiSystem.getSequence(new File("assets/midi/rowdy.mid"));
+        Sequence sequence = null;
+        if (RhythmGame.songname.equals("rowdy")){
+            sequence = MidiSystem.getSequence(new File("assets/midi/rowdy.mid"));
+        } else if (RhythmGame.songname.equals("star")){
+            sequence = MidiSystem.getSequence(new File("assets/midi/star.mid"));
+            timeScale = 150f/60 * .9585f;
+        }
+
         int trackNumber = 0;
+        assert sequence != null;
         for (Track track : sequence.getTracks()) {
             trackNumber++;
             //System.out.println("Track " + trackNumber + ": size = " + track.size());
@@ -453,17 +463,30 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
     @Override
     public void show(){
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                song.play();
-            }
-        },.9f);
+        if (RhythmGame.songname.equals("rowdy")) {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    song.play();
+                }
+            }, .9f);
+        } else if (RhythmGame.songname.equals("star")){
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    song2.play();
+                }
+            }, .8f);
+        }
     }
 
     @Override
     public void hide(){
-        song.stop();
+        if (song.isPlaying()) {
+            song.stop();
+        }else if(song2.isPlaying()) {
+            song2.stop();
+        }
     }
 
     @Override
