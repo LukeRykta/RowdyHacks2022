@@ -159,7 +159,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public void iterHandle(float dt){
         for (Iterator<Rectangle> iter = leftNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
-            note.y -= 100 * dt;
+            note.y -= 200 * dt;
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
@@ -176,7 +176,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         for (Iterator<Rectangle> iter = upNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
-            note.y -= 100 * dt;
+            note.y -= 200* dt;
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
@@ -193,7 +193,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         for (Iterator<Rectangle> iter = downNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
-            note.y -= 100 * dt;
+            note.y -= 200 * dt;
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
@@ -210,7 +210,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         for (Iterator<Rectangle> iter = rightNotes.iterator(); iter.hasNext();) {
             Rectangle note = iter.next(); // create note for each existing object in notes
-            note.y -= 100 * dt;
+            note.y -= 200 * dt;
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
@@ -230,6 +230,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
     public void render(float delta) {
         Gdx.gl.glClearColor(.5f, .5f, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        hud.update(delta);
+        hud.stage.draw();
 
         batch.setProjectionMatrix(gamecam.combined);
 
@@ -253,8 +256,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.end();
 
         batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.update(delta);
-        hud.stage.draw();
         update(delta);
     }
 
@@ -276,7 +277,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
-        music.stop();
+        //music.stop();
     }
 
     @Override

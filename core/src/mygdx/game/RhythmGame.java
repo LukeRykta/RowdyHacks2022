@@ -21,23 +21,31 @@ import java.util.EnumMap;
 
 public class RhythmGame extends Game {
 	private static final String TAG = RhythmGame.class.getSimpleName(); // get each screen name for logging when moving between screens
-	public static String username = "";
 	private EnumMap<ScreenType, AbstractScreen> screenCache; // defining our screenCache which will allow us to change screens without losing data
+
 	private FitViewport screenViewport; // define the ratio of our screen
-	private Music music;
-	SpriteBatch batch;
-	Texture img;
+	private AssetManager manager;
+
+	public static String username = "";
+	public static int highScore = 0;
 
 	public static int V_WIDTH = 400; // use vwidth and vheight for scaling sprites and screens
 	public static int V_HEIGHT = 208;
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-
 		screenCache = new EnumMap<ScreenType, AbstractScreen>(ScreenType.class); // create our cache
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
-		music = Gdx.audio.newMusic(Gdx.files.internal("music/songs/menu.mp3"));
+
+		manager = new AssetManager();
+		manager.load("music/songs/menu.mp3", Music.class);
+		manager.load("music/songs/star.mp3", Music.class);
+		manager.load("music/sounds/fx3.wav", Sound.class);
+		manager.load("music/sounds/back.wav", Sound.class);
+		manager.load("music/sounds/forward.wav", Sound.class);
+		manager.load("music/sounds/fx3.wav", Sound.class);
+		manager.load("music/sounds/fx3.wav", Sound.class);
+		manager.finishLoading();
 
 		try {
 			setScreen(ScreenType.OPENING); // attempt to set screen to our menu (this will create a new screen if it's null)
@@ -55,16 +63,15 @@ public class RhythmGame extends Game {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+
 	}
 
 	public FitViewport getScreenViewport() {
 		return screenViewport;
 	}
 
-	public Music getMusic() {
-		return music;
+	public AssetManager getMusic() {
+		return manager;
 	}
 
 	public void setScreen(final ScreenType screenType) throws ReflectionException {
