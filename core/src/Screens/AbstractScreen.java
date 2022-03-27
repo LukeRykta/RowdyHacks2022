@@ -1,6 +1,7 @@
 package Screens;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import mygdx.game.RhythmGame;
@@ -8,12 +9,12 @@ import mygdx.game.RhythmGame;
 public class AbstractScreen implements Screen {
     protected final RhythmGame context;
     protected final FitViewport viewport;
-    protected final Music music;
+    protected AssetManager manager;
 
     public AbstractScreen(final RhythmGame context) {
         this.context = context;
         viewport = context.getScreenViewport();
-        music = context.getMusic();
+        manager = context.getMusic();
     }
 
     @Override

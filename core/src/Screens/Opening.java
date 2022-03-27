@@ -3,6 +3,7 @@ package Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,6 +28,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private Label presentInfo;
     private Label nameInfo;
     private Skin skin;
+    private Music music;
 
     protected Sound forwardSound;
 
@@ -39,7 +41,9 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     public void initMusic(){
         //todo add sounds and start music here
-        forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
+        music = manager.get("music/songs/menu.mp3");
+        forwardSound = manager.get("music/sounds/forward.wav");
+        music.setVolume(.5f);
     }
 
     public void initSkin(){

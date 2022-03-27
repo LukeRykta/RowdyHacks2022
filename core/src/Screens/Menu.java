@@ -30,8 +30,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Skin skin;
     private Stage stage;
     private Button testButton;
-
-    protected Sound forwardSound;
+    private Music music;
+    private Sound forwardSound;
 
     public Menu(final RhythmGame context) {
         super(context);
@@ -41,7 +41,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     }
 
     public void initMusic(){
-        forwardSound = Gdx.audio.newSound(Gdx.files.internal("music/sounds/fx3.wav"));
+        music = manager.get("music/songs/menu.mp3");
+        forwardSound = manager.get("music/sounds/forward.wav");
     }
 
     private void initSkin(){
@@ -89,7 +90,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1,  0, 0, 1);
+        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         update(delta);
         stage.act(delta);
