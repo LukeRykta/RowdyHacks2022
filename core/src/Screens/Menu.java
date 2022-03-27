@@ -39,6 +39,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     private Music music;
     private Sound forwardSound;
+    private Sound nextSound;
+    private Sound backSound;
 
     public Menu(final RhythmGame context) {
         super(context);
@@ -50,6 +52,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     public void initMusic(){
         music = manager.get("music/songs/menu.mp3");
         forwardSound = manager.get("music/sounds/forward.wav");
+        backSound = manager.get("music/sounds/back.wav");
+        //nextSound = manager.get("music/sounds/next.wav");
     }
 
     private void initSkin(){
@@ -156,6 +160,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
+                        backSound.play();
                         Gdx.app.exit();
                     }
                 },0.8f);
@@ -196,6 +201,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
+                    backSound.play();
                     Gdx.app.exit();
                 }
             },0.8f);

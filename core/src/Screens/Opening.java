@@ -75,6 +75,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                forwardSound.play();
                 openingTable.removeActor(presentInfo);
                 openingTable.add(nameInfo).padTop(stage.getHeight()/2);
                 stage.addActor(name);

@@ -40,11 +40,10 @@ public class RhythmGame extends Game {
 		manager = new AssetManager();
 		manager.load("music/songs/menu.mp3", Music.class);
 		manager.load("music/songs/star.mp3", Music.class);
-		manager.load("music/sounds/fx3.wav", Sound.class);
+		//manager.load("music/sounds/fx3.wav", Sound.class);
 		manager.load("music/sounds/back.wav", Sound.class);
 		manager.load("music/sounds/forward.wav", Sound.class);
-		manager.load("music/sounds/fx3.wav", Sound.class);
-		manager.load("music/sounds/fx3.wav", Sound.class);
+		manager.load("music/sounds/next.wav", Sound.class);
 		manager.finishLoading();
 
 		try {
