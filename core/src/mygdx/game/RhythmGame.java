@@ -47,7 +47,8 @@ public class RhythmGame extends Game {
 		manager.load("music/sounds/forward.wav", Sound.class);
 		manager.load("music/sounds/fx10.mp3", Sound.class);
 		manager.load("music/sounds/fx11.mp3", Sound.class);
-		manager.load("music/sounds/next.wav", Sound.class);
+		//manager.load("music/sounds/fx3.wav", Sound.class);
+		//manager.load("music/sounds/fx3.wav", Sound.class);
 		manager.finishLoading();
 
 		try {

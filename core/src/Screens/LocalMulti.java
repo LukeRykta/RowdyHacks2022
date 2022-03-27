@@ -552,34 +552,34 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
 
         //right side
         if (Gdx.input.isKeyPressed(Input.Keys.A))
-            batch.draw(leftTriggerP, RtriggerLR[0].x, RtriggerLR[0].y);
+            batch.draw(leftTriggerP, RtriggerLR[3].x, RtriggerLR[3].y);
         else
-            batch.draw(leftTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // left
+            batch.draw(leftTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // left
 
         if (Gdx.input.isKeyPressed(Input.Keys.W))
-            batch.draw(upTriggerP, RtriggerLR[1].x, RtriggerLR[1].y);
+            batch.draw(upTriggerP, RtriggerLR[2].x, RtriggerLR[2].y);
         else
-            batch.draw(upTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // up
+            batch.draw(upTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // up
 
         if (Gdx.input.isKeyPressed(Input.Keys.S))
-            batch.draw(downTriggerP, RtriggerLR[2].x, RtriggerLR[2].y);
+            batch.draw(downTriggerP, RtriggerLR[1].x, RtriggerLR[1].y);
         else
-            batch.draw(downTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // down
+            batch.draw(downTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // down
 
         if (Gdx.input.isKeyPressed(Input.Keys.D))
-            batch.draw(rightTriggerP, RtriggerLR[3].x, RtriggerLR[3].y);
+            batch.draw(rightTriggerP, RtriggerLR[0].x, RtriggerLR[0].y);
         else
-            batch.draw(rightTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // right
+            batch.draw(rightTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // right
 
         batch.draw(leftTrigger, LtriggerLR[3].x, LtriggerLR[3].y); // left
         batch.draw(upTrigger, LtriggerLR[2].x, LtriggerLR[2].y); // up
         batch.draw(downTrigger, LtriggerLR[1].x, LtriggerLR[1].y); // down
         batch.draw(rightTrigger, LtriggerLR[0].x, LtriggerLR[0].y); // right
 
-        batch.draw(leftTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // left
-        batch.draw(upTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // up
-        batch.draw(downTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // down
-        batch.draw(rightTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // right
+        batch.draw(leftTrigger, RtriggerLR[3].x, RtriggerLR[3].y); // left
+        batch.draw(upTrigger, RtriggerLR[2].x, RtriggerLR[2].y); // up
+        batch.draw(downTrigger, RtriggerLR[1].x, RtriggerLR[1].y); // down
+        batch.draw(rightTrigger, RtriggerLR[0].x, RtriggerLR[0].y); // right
 
         for(Rectangle leftNote2: leftNotes2)
             batch.draw(leftArrow, leftNote2.x, leftNote2.y);

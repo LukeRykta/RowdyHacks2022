@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
-    private SoloHud hud; // new hud overlay
+    private final SoloHud hud; // new hud overlay
 
     private final SpriteBatch batch; // for drawing sprites
     private OrthographicCamera gamecam;
@@ -177,6 +177,19 @@ public class Solo extends AbstractScreen implements InputProcessor {
         upTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/upP.png"));
         downTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/downP.png"));
         rightTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/rightP.png"));
+
+        blueDinoSheet = new Texture("uiGFX/texturepacks/blueDino.png"); // set file path for png
+        TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
+
+        TextureRegion[] runFrames = new TextureRegion[11];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < 11; j++) {
+                runFrames[index++] = tmp[i][j];
+            }
+        }
+
+        runAnimation = new Animation<TextureRegion>(0.1f, runFrames);
     }
 
     public void createTriggers() {
@@ -254,7 +267,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { //right pressed
             SoloHud.removeScore(100);
-
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -336,6 +348,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     threshold += 1;
                     iter.remove();
                 }
+            } else if (!note.overlaps(triggerLR[3])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                    threshold=0;
+                }
             }
         }
 
@@ -353,6 +369,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
                     iter.remove();
+                }
+            } else if (!note.overlaps(triggerLR[2])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                    threshold=0;
                 }
             }
         }
@@ -372,6 +392,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     threshold += 1;
                     iter.remove();
                 }
+            } else if (!note.overlaps(triggerLR[1])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                    threshold=0;
+                }
             }
         }
 
@@ -390,6 +414,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     threshold += 1;
                     iter.remove();
                 }
+            } else if (!note.overlaps(triggerLR[0])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                    threshold=0;
+                }
             }
         }
     }
@@ -403,6 +431,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stateTime+=delta;
+        TextureRegion currentFrame = (TextureRegion) runAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
 
         hud.update(delta);
         hud.stage.draw();
@@ -410,6 +440,8 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
+
+        batch.draw(currentFrame, stage.getWidth() / 4, stage.getHeight()/2 - 16, 32, 32); // draw x and y position and scale size
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             batch.draw(leftTriggerP, triggerLR[3].x, triggerLR[3].y);
