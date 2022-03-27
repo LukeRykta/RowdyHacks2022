@@ -252,8 +252,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
         }
         stage.act(delta);
         stage.draw();
-        //FIXME Menu button navigation
-        //if(Gdx.input.isKeyPressed(Keys.UP))
     }
 
     @Override
