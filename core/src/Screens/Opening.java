@@ -33,6 +33,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private Animation greenAnimation; // animation key frames
     private Texture blueDinoSheet; // loaded image sheet (png)
     private Texture greenDinoSheet; // loaded image sheet (png)
+    private Texture grass;
 
     private TextField name;
     private boolean canPress = false;
@@ -73,6 +74,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     public void initTextures(){
+        grass = new Texture("jungletile/jungle.png");
         blueDinoSheet = new Texture("uiGFX/texturepacks/blueDino.png"); // set file path for png
         greenDinoSheet = new Texture("uiGFX/texturepacks/greenDino.png"); // set file path for png
         TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
@@ -178,8 +180,10 @@ public class Opening extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(currentBFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
-        batch.draw(currentGFrame, stage.getWidth() / 1.8f + b, stage.getHeight()/2 - 256, 512, 512); // draw x and y position and scale size
+        batch.draw(grass, 0, 0, stage.getWidth(), 300);
+        batch.draw(currentBFrame, stage.getWidth() / 4 + b, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
+        batch.draw(currentGFrame, stage.getWidth() / 1.8f + b, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
+
         batch.end();
 
         try {

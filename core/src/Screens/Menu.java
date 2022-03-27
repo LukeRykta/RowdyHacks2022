@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -45,6 +46,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Stage stage;
     private Skin skin;
     private boolean isMenuInit = false;
+    private SpriteBatch batch;
+    private Texture grass;
 
     private TextButton singleButton;
     private TextButton multiButton;
@@ -66,6 +69,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
     public Menu(final RhythmGame context) {
         super(context);
         createCamera();
+        createTextures();
         initSkin();
         initMusic();
     }
@@ -74,6 +78,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
         cam = new OrthographicCamera();
         cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
         //gamePort = new StretchViewport(RhythmGame.V_WIDTH , RhythmGame.V_HEIGHT , gamecam);
+    }
+
+    public void createTextures(){
+        grass = new Texture(Gdx.files.internal("jungletile/jungle.png"));
     }
 
     private void getLeaderboard(){
@@ -130,6 +138,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     private void initStage(){
         stage  = new Stage(new ScreenViewport(cam));
+        batch = new SpriteBatch();
 
         final Table titleTable = new Table(skin); // table for header
         menuTable = new Table(skin); // table for menu buttons
@@ -190,6 +199,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         dialog.getContentTable().add(leaderTable);
 
         initActors();
+
 
         stage.addActor(backgroundTable);
         stage.addActor(titleTable);
@@ -333,8 +343,14 @@ public class Menu extends AbstractScreen implements InputProcessor {
         } catch (ReflectionException e) {
             e.printStackTrace();
         }
+        batch.setProjectionMatrix(cam.combined);
+
         stage.act(delta);
         stage.draw();
+
+        batch.begin();
+        batch.draw(grass, 0, 0, stage.getWidth(), 300);
+        batch.end();
     }
 
     @Override
