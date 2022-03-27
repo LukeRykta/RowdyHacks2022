@@ -265,7 +265,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
-
     }
 
     @Override
