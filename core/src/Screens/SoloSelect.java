@@ -25,7 +25,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
     private TextButton song1Button;
     private TextButton song2Button;
-   // private TextButton song3Button;
+    private TextButton song3Button;
     private TextButton returnButton;
     private static Dialog dialog;
 
@@ -73,7 +73,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
         song1Button = new TextButton("Rowdy", skin); // menuTable items
         song2Button = new TextButton("Star", skin);
-        //song3Button = new TextButton ("Jump", skin);
+        song3Button = new TextButton ("Jump", skin);
         returnButton = new TextButton("Back", skin);
 
         menuTable.row();
@@ -82,7 +82,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         menuTable.row();
         menuTable.add(song2Button).padBottom(30);
         menuTable.row();
-      //  menuTable.add(song3Button).padBottom(60);
+        menuTable.add(song3Button).padBottom(60);
         menuTable.row();
         menuTable.add(returnButton).padBottom(30);
 
@@ -122,7 +122,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
             }
         });
 
-       /* song3Button.addListener(new ClickListener(){
+        song3Button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
                 Timer.schedule(new Timer.Task() {
@@ -139,7 +139,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
                 },0);
             }
         });
-*/
+
         returnButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -165,6 +165,9 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
             stage.setKeyboardFocus(song2Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song2Button.hasKeyboardFocus()){
             popSound.play();
+            stage.setKeyboardFocus(song3Button);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song3Button.hasKeyboardFocus()) {
+            popSound.play();
             stage.setKeyboardFocus(returnButton);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && returnButton.hasKeyboardFocus()){
             popSound.play();
@@ -177,9 +180,12 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song2Button.hasKeyboardFocus()){
             popSound.play();
             stage.setKeyboardFocus(song1Button);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && returnButton.hasKeyboardFocus()) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song3Button.hasKeyboardFocus()) {
             popSound.play();
             stage.setKeyboardFocus(song2Button);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && returnButton.hasKeyboardFocus()) {
+            popSound.play();
+            stage.setKeyboardFocus(song3Button);
         }
     }
 
@@ -191,6 +197,10 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song2Button.hasKeyboardFocus()){
             RhythmGame.songname = "star";
+            forwardSound.play();
+            music.stop();
+            context.setScreen(ScreenType.LOADING);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song3Button.hasKeyboardFocus()) {
             forwardSound.play();
             music.stop();
             context.setScreen(ScreenType.LOADING);
