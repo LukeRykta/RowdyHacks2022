@@ -7,12 +7,15 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -75,6 +78,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
 
+        final Table backgroundTable = new Table(skin); // Table for background
+        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
+        backgroundTable.setFillParent(true);
+
         title = new Label("RHYTHM GAME\n A game by <team name>", skin); // titleTable items
 
         singleButton = new TextButton("Singleplayer", skin); // menuTable items
@@ -102,6 +109,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
         initActors();
 
+        stage.addActor(backgroundTable);
         stage.addActor(titleTable);
         stage.addActor(menuTable);
     }

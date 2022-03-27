@@ -64,7 +64,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     public void initMusic(){
-        //todo add sounds and start music here
         music = manager.get("music/songs/menu.mp3");
         forwardSound = manager.get("music/sounds/forward.wav");
         music.setVolume(.5f);

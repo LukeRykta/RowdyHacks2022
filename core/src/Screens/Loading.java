@@ -2,10 +2,13 @@ package Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -33,6 +36,10 @@ public class Loading extends AbstractScreen{
     public void initStage(){
         stage = new Stage (new ScreenViewport());
 
+        final Table backgroundTable = new Table(skin); // Table for background
+        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
+        backgroundTable.setFillParent(true);
+
         final Table loadingTable = new Table(skin);
 
         loadingTable.setWidth(stage.getWidth());
@@ -43,6 +50,7 @@ public class Loading extends AbstractScreen{
 
         loadingTable.add(info).padTop(stage.getHeight()/2);
 
+        stage.addActor(backgroundTable);
         stage.addActor(loadingTable);
 
         Timer.schedule(new Timer.Task() {
@@ -90,7 +98,7 @@ public class Loading extends AbstractScreen{
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
+        //Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //stage.act(delta);
         stage.draw();
