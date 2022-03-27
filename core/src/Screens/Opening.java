@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -28,6 +29,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private OrthographicCamera cam;
     private Stage stage;
     private TextField name;
+    private SpriteBatch batch;
     private Label presentInfo;
     private Label nameInfo;
     private Skin skin;
@@ -59,7 +61,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         stage = new Stage (new ScreenViewport(cam));
 
         final Table backgroundTable = new Table(skin); // Table for background
-        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("arrows/bg.png"))));
+        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("uiGFX/backgrounds/bg.png"))));
         backgroundTable.setFillParent(true);
 
         final Table openingTable = new Table(skin);

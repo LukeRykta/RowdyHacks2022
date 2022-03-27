@@ -138,10 +138,13 @@ public class Solo extends AbstractScreen implements InputProcessor {
         if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) //left pressed
             Hud.removeScore(10);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)){ // switch back to menu
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            if (Hud.score > 0){
+                RhythmGame.highScore = Hud.score;
+            }
             try {
                 context.setScreen(ScreenType.MENU);
-            } catch (ReflectionException e){
+            } catch (ReflectionException e) {
                 e.printStackTrace();
             }
         }
