@@ -7,11 +7,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -55,6 +58,10 @@ public class Opening extends AbstractScreen implements InputProcessor {
     public void initStage(){
         stage = new Stage (new ScreenViewport(cam));
 
+        final Table backgroundTable = new Table(skin); // Table for background
+        backgroundTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("arrows/bg.png"))));
+        backgroundTable.setFillParent(true);
+
         final Table openingTable = new Table(skin);
         openingTable.setWidth(stage.getWidth());
         openingTable.align(center| Align.top);
@@ -70,6 +77,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         nameInfo = new Label("- Enter Your Name -", skin);
 
         openingTable.add(presentInfo).padTop(stage.getHeight()/2);
+        stage.addActor(backgroundTable);
         stage.addActor(openingTable);
 
         Timer.schedule(new Timer.Task() {
@@ -104,8 +112,13 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
+        //Gdx.gl.glClearColor(0xEB,  0x32, 0x23, 1); //red
+        //Gdx.gl.glClearColor(0xC7,  0xFB, 0x50, 1/4); //green
+        //Gdx.gl.glClearColor(0x38,  0x95, 0xF7, 1/4); //blue
+        //Gdx.gl.glClearColor(0xF5,  0xB0, 0x3E, 1/4); //orange
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         //stage.act(delta);
         stage.draw();
