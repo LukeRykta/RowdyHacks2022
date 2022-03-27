@@ -336,6 +336,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void show(){
+        initStage();
         stage.setKeyboardFocus(singleButton);
         if(!music.isPlaying()){
             music.play();

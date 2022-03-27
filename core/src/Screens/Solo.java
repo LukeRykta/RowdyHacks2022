@@ -276,7 +276,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                         e.printStackTrace();
                     }
                 }
-            }, 2f);
+            }, 1f);
         }
 
         iterHandle(dt); // checks to see if player pressed buttons at the right time
