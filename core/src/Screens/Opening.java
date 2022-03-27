@@ -40,6 +40,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private Label nameInfo;
     private Skin skin;
     private Music music;
+    private int b;
 
     float stateTime;
 
@@ -140,6 +141,10 @@ public class Opening extends AbstractScreen implements InputProcessor {
                 e.printStackTrace();
             }
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.B)){
+            b++;
+        }
     }
 
     public void update (float dt) throws ReflectionException {
@@ -162,7 +167,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(currentFrame, stage.getWidth() / 4, stage.getHeight()/2 - 128, 256, 256); // draw x and y position and scale size
+        batch.draw(currentFrame, stage.getWidth() / 4 + b, stage.getHeight()/2 - 128, 256, 256); // draw x and y position and scale size
         batch.end();
 
         try {

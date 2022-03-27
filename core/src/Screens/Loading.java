@@ -49,7 +49,11 @@ public class Loading extends AbstractScreen{
 
             @Override
             public void run() {
-                context.setScreen(new Solo(context));
+                try {
+                    context.setScreen(new Solo(context));
+                } catch (InvalidMidiDataException | IOException e) {
+                    e.printStackTrace();
+                }
                 isGameInit = true;
             }
         },2);
@@ -75,7 +79,11 @@ public class Loading extends AbstractScreen{
 
             @Override
             public void run() {
-                context.setScreen(new Solo(context));
+                try {
+                    context.setScreen(new Solo(context));
+                } catch (InvalidMidiDataException | IOException e) {
+                    e.printStackTrace();
+                }
             }
         },0);
     }

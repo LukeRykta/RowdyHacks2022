@@ -4,23 +4,44 @@ import Scenes.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import mygdx.game.RhythmGame;
 
+import javax.sound.midi.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 public class Solo extends AbstractScreen implements InputProcessor {
     private Hud hud; // new hud overlay
-    private final SpriteBatch batch;
+
+    private final SpriteBatch batch; // for drawing sprites
     private OrthographicCamera gamecam;
+
     private final float[] worldCenterXY = new float [2]; // stores x and y values for world center for easy referencing
     private final float[] trigPos = {1, 1.33f, 2, 4}; // relative positions for each lane (triggers / arrows)
+
+    public static final int NOTE_ON = 0x90; // midi stuff
+    public static final int NOTE_OFF = 0x80;
+    public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+    static String[] noteName = new String[1000];
+    static int[] lane = new int[1000];
+    static int[] octave = new int[1000];
+    static int[] velocity = new int[1000];
+    static int[] note = new int[1000];
+    static long[] tick = new long[1000];
+    static float timeScale = 88f / 60 *.9585f; //88.00002346667293f
+    private long startT;
+
+    private Music song;
 
     private Texture leftArrow; // arrow imgs
     private Texture upArrow;
@@ -39,7 +60,9 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private Array<Rectangle> downNotes;
     private Array<Rectangle> rightNotes;
 
-    public Solo(RhythmGame context) {
+    private int i = 0;
+
+    public Solo(RhythmGame context) throws InvalidMidiDataException, IOException {
         super(context); // receive cache context
         batch = new SpriteBatch(); // create batch to store all our sprite objects
         hud = new Hud(batch); // add the batch to our hud so it can draw on our screen
@@ -52,6 +75,58 @@ public class Solo extends AbstractScreen implements InputProcessor {
         createTextures(); // load our image files into local variables
         createTriggers(); // create triggers (hitboxes, position on screen, size)
         createNoteArrays();
+
+        parseMidi();
+        initMusic();
+        startT = System.currentTimeMillis();
+    }
+
+    public void initMusic(){
+        song = manager.get("music/songs/song1.mp3");
+        song.play();
+    }
+
+    public void parseMidi() throws InvalidMidiDataException, IOException {
+        Sequence sequence = MidiSystem.getSequence(new File("assets/midi/rowdy2.mid"));
+        int trackNumber = 0;
+        for (Track track : sequence.getTracks()) {
+            trackNumber++;
+            //System.out.println("Track " + trackNumber + ": size = " + track.size());
+            //System.out.println();
+            for (int i = 0; i < track.size(); i++) {
+                MidiEvent event = track.get(i);
+                //System.out.print("@" + event.getTick() + " ");
+                MidiMessage message = event.getMessage();
+                tick[i] = event.getTick();
+                System.out.println(tick[i]);
+                if (message instanceof ShortMessage) {
+                    ShortMessage sm = (ShortMessage) message;
+                    //System.out.print("Channel: " + sm.getChannel() + " ");
+                    if (sm.getCommand() == NOTE_ON) {
+                        lane[i] = sm.getData1();
+                        octave[i] = (lane[i] / 12) - 1;
+                        note[i] = lane[i] % 12;
+                        noteName[i] = NOTE_NAMES[note[i]];
+                        velocity[i] = sm.getData2();
+                        //System.out.println("time=" + (tick[i]) + " lane=" + (lane[i] + 1));
+                        //System.out.println("tick="+ tick[i] + " Note on, " + noteName[i] + octave[i] + " lane=" + lane[i] + " velocity: " + velocity[i]);
+                    } else if (sm.getCommand() == NOTE_OFF) {
+                        //lane[i] = sm.getData1();
+                        octave[i] = (lane[i] / 12) - 1;
+                        //note[i] = lane[i] % 12;
+                        noteName[i] = NOTE_NAMES[note[i]];
+                        velocity[i] = sm.getData2();
+                        //System.out.println("tick="+ tick[i] + " Note off, " + noteName[i] + octave[i] + " lane=" + lane[i] + " velocity: " + velocity[i]);
+                    } else {
+                        //System.out.println("Command:" + sm.getCommand());
+                    }
+                } else {
+                    //System.out.println("Other message: " + message.getClass());
+                }
+                //System.out.println(lane[i]);
+            }
+            System.out.println();
+        }
     }
 
     public void createCamera(){
@@ -135,8 +210,14 @@ public class Solo extends AbstractScreen implements InputProcessor {
         if(Gdx.input.isKeyJustPressed(Input.Keys.D) )
             spawnRightNote();
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) //left pressed
-            Hud.removeScore(10);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) //left pressed
+            Hud.removeScore(100);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) //up pressed
+            Hud.removeScore(100);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) //down pressed
+            Hud.removeScore(100);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) //right pressed
+            Hud.removeScore(100);
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             if (Hud.score > 0){
@@ -155,6 +236,40 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     public void update(float dt){
         handleInput(dt); // handles other inputs
+
+        long updateT = System.currentTimeMillis(); // gets time at this cycle
+
+        //System.out.println((double)updateT - (double)startT + " " + tick[i] * 10);
+        if (((((double)updateT - (double)startT)) * timeScale >= (double)(tick[i]*10)) && i < tick.length-1){ // check to see if we need to spawn another note yet and also makes sure we arent at the end of the ticks
+            if ((lane[i] == 60)){ // if key=60 (C), lane=1 (left arrow)
+                spawnLeftNote();
+            }
+            if (lane[i] == 61){ // if key=61 (C#), lane=2 (up arrow)
+                spawnUpNote();
+            }
+            if (lane[i] == 62){ // if key=62 (D), lane=3 (down arrow)
+                spawnDownNote();
+            }
+            if (lane[i] == 63){ // if key=63 (D#), lane=4 (right arrow)
+                spawnRightNote();
+            }
+            i++;
+        }
+
+        if (i == tick.length-2){ // return to menu after song over tick.length-1
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    try {
+                        i++;
+                        context.setScreen(ScreenType.MENU);
+                    } catch (ReflectionException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 2f);
+        }
+
         iterHandle(dt); // checks to see if player pressed buttons at the right time
         hud.update(dt);
     }
@@ -166,11 +281,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(10);
+                Hud.removeScore(100);
             }
             if(note.overlaps(triggerLR[3])) { // left trigger
                 if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                    Hud.addScore(20);
+                    Hud.addScore(200);
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
@@ -183,11 +298,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(10);
+                Hud.removeScore(100);
             }
             if(note.overlaps(triggerLR[2])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                    Hud.addScore(20);
+                    Hud.addScore(200);
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
@@ -200,11 +315,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(10);
+                Hud.removeScore(100);
             }
             if(note.overlaps(triggerLR[1])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                    Hud.addScore(20);
+                    Hud.addScore(200);
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
@@ -217,11 +332,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
             if (note.y + 64 < 0){ // if note goes below screen view, remove
                 iter.remove();
-                Hud.removeScore(10);
+                Hud.removeScore(100);
             }
             if(note.overlaps(triggerLR[0])) {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                    Hud.addScore(20);
+                    Hud.addScore(200);
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
@@ -280,7 +395,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
-        //music.stop();
+        song.stop();
     }
 
     @Override
