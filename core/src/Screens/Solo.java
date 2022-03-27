@@ -248,19 +248,15 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { //left pressed
             Hud.removeScore(100);
-            threshold = 0;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) { //up pressed
             Hud.removeScore(100);
-            threshold = 0;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) { //down pressed
             Hud.removeScore(100);
-            threshold = 0;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { //right pressed
             Hud.removeScore(100);
-            threshold = 0;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -343,6 +339,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
+            } else if (!note.overlaps(triggerLR[3])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                    threshold=0;
+                }
             }
         }
 
@@ -361,6 +361,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
+                }
+            } else if (!note.overlaps(triggerLR[2])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                    threshold=0;
                 }
             }
         }
@@ -381,6 +385,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
+            } else if (!note.overlaps(triggerLR[1])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                    threshold=0;
+                }
             }
         }
 
@@ -399,6 +407,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     threshold += 1;
                     //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
+                }
+            } else if (!note.overlaps(triggerLR[0])){
+                if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                    threshold=0;
                 }
             }
         }

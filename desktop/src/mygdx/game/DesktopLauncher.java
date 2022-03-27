@@ -14,7 +14,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(1920, 1080);
 		config.setForegroundFPS(165);
 		config.useVsync(true);
-		//config.setFullscreenMode(desktopMode);
+		config.setFullscreenMode(desktopMode);
 
 		new Lwjgl3Application(new RhythmGame(), config);
 	}
