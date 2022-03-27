@@ -21,21 +21,19 @@ import java.util.EnumMap;
 
 public class RhythmGame extends Game {
 	private static final String TAG = RhythmGame.class.getSimpleName(); // get each screen name for logging when moving between screens
-	public static String username = "";
 	private EnumMap<ScreenType, AbstractScreen> screenCache; // defining our screenCache which will allow us to change screens without losing data
+
 	private FitViewport screenViewport; // define the ratio of our screen
 	private AssetManager manager;
-	private Music music;
-	SpriteBatch batch;
-	Texture img;
+
+	public static String username = "";
+	public static int highScore = 0;
 
 	public static int V_WIDTH = 400; // use vwidth and vheight for scaling sprites and screens
 	public static int V_HEIGHT = 208;
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-
 		screenCache = new EnumMap<ScreenType, AbstractScreen>(ScreenType.class); // create our cache
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
 
@@ -65,8 +63,7 @@ public class RhythmGame extends Game {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+
 	}
 
 	public FitViewport getScreenViewport() {

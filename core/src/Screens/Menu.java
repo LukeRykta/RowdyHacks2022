@@ -10,13 +10,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -27,9 +25,16 @@ import javax.swing.event.MenuListener;
 
 public class Menu extends AbstractScreen implements InputProcessor {
 
-    private Skin skin;
     private Stage stage;
-    private Button testButton;
+    private Skin skin;
+
+    private TextButton singleButton;
+    private TextButton multiButton;
+    private TextButton quitButton;
+    private TextButton leaderButton;
+    private static Dialog dialog;
+    private Label title;
+
     private Music music;
     private Sound forwardSound;
 
@@ -53,23 +58,106 @@ public class Menu extends AbstractScreen implements InputProcessor {
         stage  = new Stage(new ScreenViewport());
 
         final Table testTable = new Table(skin);
-        testTable.setWidth(stage.getWidth());
-        testTable.align(Align.center|Align.top);
-        testTable.setPosition(0, Gdx.graphics.getHeight());
+        final Table titleTable = new Table(skin); // table for header
+        final Table menuTable = new Table(skin); // table for menu buttons
+        final Table leaderTable = new Table(skin); // table for leaderboard results
 
-        testButton = new TextButton("TEST", skin);
+        //initialize menuTable and title table sizes to scale with aspect ration
+        menuTable.setWidth(stage.getWidth());
+        menuTable.align(Align.center|Align.top);
+        menuTable.setPosition(0, Gdx.graphics.getHeight());
+        titleTable.setWidth(stage.getWidth());
+        titleTable.align(Align.center|Align.top);
+        titleTable.setPosition(0, Gdx.graphics.getHeight());
+
+        title = new Label("RHYTHM GAME\n A game by Brandonio and Luke", skin); // titleTable items
+
+        singleButton = new TextButton("Singleplayer", skin); // menuTable items
+        multiButton = new TextButton("Multiplayer", skin);
+        leaderButton = new TextButton ("Leaderboard", skin);
+        quitButton = new TextButton("Quit Game", skin);
+
+        titleTable.add(title).padTop(stage.getHeight()/4);
+        menuTable.row();
+        menuTable.padTop(stage.getHeight()/2);
+        menuTable.add(singleButton).padBottom(30);
+        menuTable.row();
+        menuTable.add(multiButton).padBottom(30);
+        menuTable.row();
+        menuTable.add(leaderButton).padBottom(30);
+        menuTable.row();
+        menuTable.add(quitButton);
+
+        dialog = new Dialog("Leaderboard", skin, "dialog-modal");
+        dialog.background("window");
+
+        dialog.setMovable(false);
+        dialog.button("return");
+        dialog.getContentTable().add(leaderTable);
 
         initActors();
-        testTable.add(testButton);
-        stage.addActor(testTable);
+
+        stage.addActor(titleTable);
+        stage.addActor(menuTable);
     }
 
     private void initActors(){
-        testButton.addListener(new ClickListener(){
+        singleButton.addListener(new ClickListener(){ // singleplayer
             @Override
             public void clicked(InputEvent event, float x, float y){
-                forwardSound.play();
-                System.out.println("Button clicked");
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        try{
+                            context.setScreen(ScreenType.SOLO);
+                        } catch (ReflectionException e){
+                            e.printStackTrace();
+                        }
+                    }
+                },0);
+            }
+        });
+
+        multiButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                Timer.schedule(new Timer.Task() {
+
+                    @Override
+                    public void run() {
+                        try{
+                            context.setScreen(ScreenType.MULTI);
+                        } catch (ReflectionException e){
+                            e.printStackTrace();
+                        }
+                    }
+                },0);
+            }
+        });
+
+        leaderButton.addListener(new ClickListener(){ // leaderboard
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                dialog.show(stage).setY(dialog.getHeight()/2);
+                Timer.schedule(new Timer.Task() {
+
+                    @Override
+                    public void run() {
+
+                    }
+                },0);
+            }
+        });
+
+        quitButton.addListener(new ClickListener(){ // quit
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        Gdx.app.exit();
+                    }
+                },0.8f);
             }
         });
     }
@@ -81,6 +169,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
             } catch (ReflectionException e){
                 e.printStackTrace();
             }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            dialog.hide();
         }
     }
 
