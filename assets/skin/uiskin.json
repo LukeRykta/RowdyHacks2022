@@ -29,7 +29,7 @@ TextButtonStyle: {
 		font: commodore-64,
 		fontColor: { a: 1.0, b: 0.5294118, g: 0.53333336, r: 0.5372549 },
 		downFontColor: { a: 1.0, b: 0.5568628, g: 0.5647059, r: 0.57254905 },
-		focusedFontColor: { a: 1.0, b: 0.99215686, g: 1.0, r: 0.16470589 },
+		focusedFontColor: { a: 1.0, b: 1.0, g: 0.98039216, r: 0.84705883 },
 		disabledFontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
 		up: button,
 		down: button-down

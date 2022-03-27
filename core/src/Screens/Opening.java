@@ -35,6 +35,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     private Texture blueDinoSheet; // loaded image sheet (png)
 
     private TextField name;
+    private boolean canPress = false;
     private SpriteBatch batch;
     private Label presentInfo;
     private Label nameInfo;
@@ -117,6 +118,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                canPress = true;
                 forwardSound.play();
                 openingTable.removeActor(presentInfo);
                 openingTable.add(nameInfo).padTop(stage.getHeight()/2);
@@ -129,7 +131,7 @@ public class Opening extends AbstractScreen implements InputProcessor {
     }
 
     public void handleInput(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && canPress){
             RhythmGame.username = name.getText();
             try{
                 context.setScreen(ScreenType.MENU);
