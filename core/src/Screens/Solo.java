@@ -126,7 +126,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 //System.out.print("@" + event.getTick() + " ");
                 MidiMessage message = event.getMessage();
                 tick[i] = event.getTick();
-                System.out.println(tick[i]);
+                //System.out.println(tick[i]);
                 if (message instanceof ShortMessage) {
                     ShortMessage sm = (ShortMessage) message;
                     //System.out.print("Channel: " + sm.getChannel() + " ");
@@ -153,7 +153,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 }
                 //System.out.println(lane[i]);
             }
-            System.out.println();
+            //System.out.println();
         }
     }
 
@@ -305,6 +305,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                     } catch (ReflectionException e) {
                         e.printStackTrace();
                     }
+                    i=0;
                 }
             }, 1f);
         }
@@ -314,7 +315,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void iterHandle(float dt){
-        System.out.println(threshold);
         if(threshold >= 10 && threshold <= 29)
             index = 1;
         else if(threshold >= 30 && threshold <= 44)
@@ -334,7 +334,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -353,7 +352,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                     SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -372,7 +370,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
                     SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -391,7 +388,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
                     SoloHud.addScore(200 * multiplier[index]);
                     threshold += 1;
-                    //System.out.println("EVENT: downArrow triggered");
                     iter.remove();
                 }
             }
@@ -400,7 +396,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
+        if (RhythmGame.songname.equals("rowdy")){
+            Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
+        } else if (RhythmGame.songname.equals("star")){
+            Gdx.gl.glClearColor(0.55882354f,  0.45882354f, 0.70588236f, 1);
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         hud.update(delta);
@@ -463,6 +464,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
     @Override
     public void show(){
+        try {
+            parseMidi();
+        } catch (InvalidMidiDataException | IOException e) {
+            e.printStackTrace();
+        }
         if (RhythmGame.songname.equals("rowdy")) {
             Timer.schedule(new Timer.Task() {
                 @Override

@@ -333,12 +333,13 @@ public class LocalMulti extends AbstractScreen implements InputProcessor {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    i++;
+                    i=0;
                     try {
                         context.setScreen(ScreenType.MENU);
                     } catch (ReflectionException e) {
                         e.printStackTrace();
                     }
+                    i=0;
                 }
             }, 1f);
         }

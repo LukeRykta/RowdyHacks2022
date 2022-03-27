@@ -181,7 +181,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
 
-        title = new Label("DINO BEATS\n A game by <team name>", skin); // titleTable items
+        title = new Label("DINO BEATS\n A game by <L&B>", skin); // titleTable items
         title.setScale(200, 200);
 
         singleButton = new TextButton("Singleplayer", skin); // menuTable items
