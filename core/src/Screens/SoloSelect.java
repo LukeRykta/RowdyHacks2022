@@ -80,7 +80,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         menuTable.row();
         menuTable.add(song2Button).padBottom(30);
         menuTable.row();
-        menuTable.add(song3Button).padBottom(30);
+        menuTable.add(song3Button).padBottom(60);
         menuTable.row();
         menuTable.add(returnButton).padBottom(30);
 
@@ -95,6 +95,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
+                    music.stop();
                     context.setScreen(ScreenType.LOADING);
                 } catch (ReflectionException e) {
                     e.printStackTrace();
@@ -147,7 +148,6 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
                     @Override
                     public void run() {
                         try{
-                            music.stop();
                             context.setScreen(ScreenType.MENU);
                         } catch (ReflectionException e){
                             e.printStackTrace();
@@ -182,10 +182,13 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song1Button.hasKeyboardFocus()){
+            music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song2Button.hasKeyboardFocus()){
+            music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song3Button.hasKeyboardFocus()) {
+            music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && returnButton.hasKeyboardFocus()) {
             context.setScreen(ScreenType.MENU);
@@ -205,7 +208,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            dialog.hide();
+            context.setScreen(ScreenType.MENU);
         }
     }
 
@@ -239,6 +242,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
+
     }
 
     @Override

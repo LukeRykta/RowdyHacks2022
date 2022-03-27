@@ -26,6 +26,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
     private TextButton song1Button;
     private TextButton song2Button;
     private TextButton song3Button;
+    private TextButton returnButton;
     private static Dialog dialog;
 
     private Table menuTable;
@@ -71,6 +72,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         song1Button = new TextButton("Song1", skin); // menuTable items
         song2Button = new TextButton("Song2", skin);
         song3Button = new TextButton ("Song3", skin);
+        returnButton = new TextButton ("Back", skin);
 
         menuTable.row();
         menuTable.padTop(stage.getHeight()/2);
@@ -78,8 +80,9 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         menuTable.row();
         menuTable.add(song2Button).padBottom(30);
         menuTable.row();
-        menuTable.add(song3Button).padBottom(30);
-        //menuTable.row();
+        menuTable.add(song3Button).padBottom(60);
+        menuTable.row();
+        menuTable.add(returnButton).padBottom(30);
 
         initActors();
 
@@ -105,36 +108,35 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         song2Button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                Timer.schedule(new Timer.Task() {
-
-                    @Override
-                    public void run() {
-                        try{
-                            music.stop();
-                            context.setScreen(ScreenType.LOADING);
-                        } catch (ReflectionException e){
-                            e.printStackTrace();
-                        }
-                    }
-                },0);
+                try{
+                    music.stop();
+                    context.setScreen(ScreenType.LOADING);
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         song3Button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                Timer.schedule(new Timer.Task() {
+                try{
+                    music.stop();
+                    context.setScreen(ScreenType.LOADING);
+                } catch (ReflectionException e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
-                    @Override
-                    public void run() {
-                        try{
-                            music.stop();
-                            context.setScreen(ScreenType.LOADING);
-                        } catch (ReflectionException e){
-                            e.printStackTrace();
-                        }
-                    }
-                },0);
+        returnButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    context.setScreen(ScreenType.MENU);
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -145,25 +147,34 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song2Button.hasKeyboardFocus()){
             stage.setKeyboardFocus(song3Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && song3Button.hasKeyboardFocus()) {
+            stage.setKeyboardFocus(returnButton);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && returnButton.hasKeyboardFocus()){
             stage.setKeyboardFocus(song1Button);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song1Button.hasKeyboardFocus()){
-            stage.setKeyboardFocus(song3Button);
+            stage.setKeyboardFocus(returnButton);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song2Button.hasKeyboardFocus()){
             stage.setKeyboardFocus(song1Button);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && song3Button.hasKeyboardFocus()) {
             stage.setKeyboardFocus(song2Button);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && returnButton.hasKeyboardFocus()) {
+            stage.setKeyboardFocus(song3Button);
         }
     }
 
     public void handleEnter() throws ReflectionException {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song1Button.hasKeyboardFocus()){
+            music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song2Button.hasKeyboardFocus()){
+            music.stop();
             context.setScreen(ScreenType.LOADING);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && song3Button.hasKeyboardFocus()) {
+            music.stop();
             context.setScreen(ScreenType.LOADING);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && returnButton.hasKeyboardFocus()) {
+            context.setScreen(ScreenType.MENU);
         }
     }
 
@@ -180,7 +191,7 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            dialog.hide();
+            context.setScreen(ScreenType.MENU);
         }
     }
 
