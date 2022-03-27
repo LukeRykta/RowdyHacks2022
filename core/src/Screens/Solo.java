@@ -83,11 +83,10 @@ public class Solo extends AbstractScreen implements InputProcessor {
 
     public void initMusic(){
         song = manager.get("music/songs/song1.mp3");
-        song.play();
     }
 
     public void parseMidi() throws InvalidMidiDataException, IOException {
-        Sequence sequence = MidiSystem.getSequence(new File("assets/midi/rowdy2.mid"));
+        Sequence sequence = MidiSystem.getSequence(new File("assets/midi/rowdy.mid"));
         int trackNumber = 0;
         for (Track track : sequence.getTracks()) {
             trackNumber++;
@@ -390,7 +389,12 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
     @Override
     public void show(){
-        //music.play();
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                song.play();
+            }
+        },.9f);
     }
 
     @Override
