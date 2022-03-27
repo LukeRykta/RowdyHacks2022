@@ -35,6 +35,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private static Dialog dialog;
     private Label title;
 
+    private Table menuTable;
+
     private Music music;
     private Sound forwardSound;
 
@@ -57,9 +59,8 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private void initStage(){
         stage  = new Stage(new ScreenViewport());
 
-        final Table testTable = new Table(skin);
         final Table titleTable = new Table(skin); // table for header
-        final Table menuTable = new Table(skin); // table for menu buttons
+        menuTable = new Table(skin); // table for menu buttons
         final Table leaderTable = new Table(skin); // table for leaderboard results
 
         //initialize menuTable and title table sizes to scale with aspect ration
@@ -162,7 +163,32 @@ public class Menu extends AbstractScreen implements InputProcessor {
         });
     }
 
+    public void getFocus() {
+        if (Gdx.input.isKeyJustPressed(Keys.DOWN) && singleButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(multiButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && multiButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(leaderButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && leaderButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(quitButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.DOWN) && quitButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(singleButton);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Keys.UP) && singleButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(quitButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.UP) && multiButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(singleButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.UP) && leaderButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(multiButton);
+        } else if (Gdx.input.isKeyJustPressed(Keys.UP) && quitButton.hasKeyboardFocus()){
+            stage.setKeyboardFocus(leaderButton);
+        }
+    }
+
+
     public void handleInput(float dt){
+        getFocus();
+
         if (Gdx.input.isKeyJustPressed(Keys.NUM_2)){
             try {
                 context.setScreen(ScreenType.SOLO);
@@ -182,6 +208,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Keys.ENTER)){
+            //todo add trigger event for pressing enter on a button
+        }
         Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         update(delta);
@@ -193,6 +222,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void show(){
+        stage.setKeyboardFocus(singleButton);
         if(!music.isPlaying()){
             music.play();
         }
