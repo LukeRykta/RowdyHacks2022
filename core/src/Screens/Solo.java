@@ -39,7 +39,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
     static int[] note = new int[1000];
     static long[] tick = new long[1000];
     static float timeScale = 88f / 60 *.9585f; //88.00002346667293f
-    private long startT;
+    private final long startT;
 
     private Music song;
 
@@ -52,6 +52,11 @@ public class Solo extends AbstractScreen implements InputProcessor {
     private Texture upTrigger;
     private Texture downTrigger;
     private Texture rightTrigger;
+
+    private Texture leftTriggerP; // trigger imgs
+    private Texture upTriggerP;
+    private Texture downTriggerP;
+    private Texture rightTriggerP;
 
     private final Rectangle[] triggerLR = new Rectangle[4]; // each element represents a trigger
 
@@ -134,15 +139,20 @@ public class Solo extends AbstractScreen implements InputProcessor {
     }
 
     public void createTextures(){
-        leftArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
-        upArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
-        downArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
-        rightArrow = new Texture(Gdx.files.internal("gameGFX/arrows/downArrow.png"));
+        leftArrow = new Texture(Gdx.files.internal("gameGFX/arrows/BlueArrow.png"));
+        upArrow = new Texture(Gdx.files.internal("gameGFX/arrows/GreenArrow.png"));
+        downArrow = new Texture(Gdx.files.internal("gameGFX/arrows/YellowArrow.png"));
+        rightArrow = new Texture(Gdx.files.internal("gameGFX/arrows/RedArrow.png"));
 
-        leftTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
-        upTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
-        downTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
-        rightTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/downTriggerP.png"));
+        leftTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/left.png"));
+        upTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/up.png"));
+        downTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/down.png"));
+        rightTrigger = new Texture(Gdx.files.internal("gameGFX/triggers/right.png"));
+
+        leftTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/leftP.png"));
+        upTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/upP.png"));
+        downTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/downP.png"));
+        rightTriggerP = new Texture(Gdx.files.internal("gameGFX/triggersP/rightP.png"));
     }
 
     public void createTriggers() {
@@ -354,6 +364,26 @@ public class Solo extends AbstractScreen implements InputProcessor {
         batch.setProjectionMatrix(gamecam.combined);
 
         batch.begin();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            batch.draw(leftTriggerP, triggerLR[3].x, triggerLR[3].y);
+        else
+            batch.draw(leftTrigger, triggerLR[3].x, triggerLR[3].y); // left
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP))
+            batch.draw(upTriggerP, triggerLR[2].x, triggerLR[2].y);
+        else
+            batch.draw(upTrigger, triggerLR[2].x, triggerLR[2].y); // up
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            batch.draw(downTriggerP, triggerLR[1].x, triggerLR[1].y);
+        else
+            batch.draw(downTrigger, triggerLR[1].x, triggerLR[1].y); // down
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            batch.draw(rightTriggerP, triggerLR[0].x, triggerLR[0].y);
+        else
+            batch.draw(rightTrigger, triggerLR[0].x, triggerLR[0].y); // right
 
         batch.draw(leftTrigger, triggerLR[3].x, triggerLR[3].y); // left
         batch.draw(upTrigger, triggerLR[2].x, triggerLR[2].y); // up
