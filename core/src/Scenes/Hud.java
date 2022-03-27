@@ -41,6 +41,10 @@ public class Hud implements Disposable {
         stage.addActor(table);
     }
 
+    public static void addMulti(int value){
+
+    }
+
     public static void addScore(int value){
         score += value;
         scoreLabel.setText(String.format("%06d", score));

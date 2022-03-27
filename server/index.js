@@ -4,18 +4,16 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const uuid = require('node-uuid');
 const Room = require('./room.js');
-const _ = require('underscore')._;
-
 /*
   Global variable/arrays that will store important user data
   that will be used through many socket events.
 */
+
 //stores players by index
 let players = [];
 //stores players by their unique ID.
 let person = [];
 let rooms = [];
-
 //variables that might be used.
 let roomLimit = 0;
 let roomIndex = 0;
