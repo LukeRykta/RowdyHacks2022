@@ -395,15 +395,6 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 song.play();
             }
         },.9f);
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                if (song.isPlaying()){
-                    song.stop();
-                }
-            }
-        },1f);
     }
 
     @Override

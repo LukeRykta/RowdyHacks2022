@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -21,13 +22,26 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import io.github.cdimascio.dotenv.Dotenv;
 import mygdx.game.RhythmGame;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuListener;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+import static com.mongodb.client.model.Sorts.descending;
 
 public class Menu extends AbstractScreen implements InputProcessor {
-
+    private OrthographicCamera cam;
     private Stage stage;
     private Skin skin;
 
@@ -45,11 +59,62 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Sound nextSound;
     private Sound backSound;
 
+    static String[] names = new String[1000];
+    static int[] scores = new int[1000];
+
     public Menu(final RhythmGame context) {
         super(context);
+        createCamera();
         initSkin();
         initStage();
         initMusic();
+    }
+
+    public void createCamera(){
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
+        //gamePort = new StretchViewport(RhythmGame.V_WIDTH , RhythmGame.V_HEIGHT , gamecam);
+    }
+
+    private void getLeaderboard(){
+        //Dotenv dotenv = Dotenv.load();
+        //String val = dotenv.get("DB_PASS");
+        //System.out.println(val);
+
+        System.out.println("Testing Connection...");
+
+        ConnectionString connectionString = new ConnectionString("mongodb+srv://admin:I7y34puLPgEpEdYu@leaderboard.ibzv0.mongodb.net/leaderboard?retryWrites=true&w=majority");
+        System.out.println("Connection created...");
+
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(settings);
+        System.out.println("Mongo Client created...");
+
+        MongoDatabase database = mongoClient.getDatabase("leaderboard");
+        System.out.println("Database \"leaderboard\" created...");
+
+        MongoCollection<Document> nsCollection = database.getCollection("nameScore");
+        System.out.println("Collection \"nameScore\" created...");
+
+        if (RhythmGame.highScore > 0){ // add player name and high score to mongoAtlas
+            Document player = new Document("_id", new ObjectId());
+            player.append("name", RhythmGame.username)
+                    .append("score", RhythmGame.highScore);
+            nsCollection.insertOne(player);
+        }
+        RhythmGame.highScore=0; //reset highscore after adding it to the database
+
+        int i=0;
+        Consumer<Document> printItems = document -> document.get("name");
+        for (Document document : nsCollection.find().sort(descending("score"))) { // retrieves and sorts items in document then fills them into local string/int arrays
+            printItems.accept(document);
+            names[i] = document.get("name").toString();
+            scores[i] = Integer.parseInt(document.get("score").toString());
+            i++;
+        }
+        System.out.println("records found: " + i);
     }
 
     public void initMusic(){
@@ -64,7 +129,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
     }
 
     private void initStage(){
-        stage  = new Stage(new ScreenViewport());
+        stage  = new Stage(new ScreenViewport(cam));
 
         final Table titleTable = new Table(skin); // table for header
         menuTable = new Table(skin); // table for menu buttons
@@ -82,14 +147,15 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
 
-        title = new Label("RHYTHM GAME\n A game by <team name>", skin); // titleTable items
+        title = new Label("DINO BEATS\n A game by <team name>", skin); // titleTable items
+        title.setScale(200, 200);
 
         singleButton = new TextButton("Singleplayer", skin); // menuTable items
         multiButton = new TextButton("Multiplayer", skin);
         leaderButton = new TextButton ("Leaderboard", skin);
         quitButton = new TextButton("Quit Game", skin);
 
-        titleTable.add(title).padTop(stage.getHeight()/4);
+        titleTable.add(title).expand().padTop(stage.getHeight()/4);
         menuTable.row();
         menuTable.padTop(stage.getHeight()/2);
         menuTable.add(singleButton).padBottom(30);
@@ -103,6 +169,19 @@ public class Menu extends AbstractScreen implements InputProcessor {
         dialog = new Dialog("Leaderboard", skin, "dialog-modal");
         dialog.background("window");
 
+        getLeaderboard();
+        for (int i = 0; i < 20; i++) {
+            if (names[i] == null){
+                names[i] = "<empty>";
+            } else if(names[i].equals("")){
+                names[i] = "player";
+            }
+            leaderTable.add(" " + String.format("%-12s", names[i]) + "  " + String.format("%12s", scores[i]) + " ").padTop(10);
+            leaderTable.row();
+        }
+        leaderTable.add("");
+
+        //dialog.debugAll();
         dialog.setMovable(false);
         dialog.button("return");
         dialog.getContentTable().add(leaderTable);
@@ -245,6 +324,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
         }
         Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         try {
             update(delta);
         } catch (ReflectionException e) {
@@ -265,6 +345,11 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
     @Override
     public void hide(){
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        cam.update();
     }
 
     @Override

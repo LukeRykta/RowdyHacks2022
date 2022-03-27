@@ -86,8 +86,6 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
     public void initSkin(){
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT);
     }
 
     public void initStage(){
