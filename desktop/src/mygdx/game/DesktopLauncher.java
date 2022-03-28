@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		Graphics.DisplayMode desktopMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setWindowedMode(1920, 1080);
+		config.setWindowIcon("uiGFX/misc/icon.png");
 		config.setForegroundFPS(165);
 		config.useVsync(true);
 		config.setFullscreenMode(desktopMode);

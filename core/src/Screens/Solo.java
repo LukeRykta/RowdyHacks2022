@@ -112,7 +112,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
             sequence = MidiSystem.getSequence(new File("assets/midi/rowdy.mid"));
         } else if (RhythmGame.songname.equals("star")){
             sequence = MidiSystem.getSequence(new File("assets/midi/star.mid"));
-            timeScale = 150f/60 * .9585f;
+            timeScale = 150f/60 * .95856f;
         }
 
         int trackNumber = 0;
@@ -427,7 +427,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
         if (RhythmGame.songname.equals("rowdy")){
             Gdx.gl.glClearColor(0.25882354f,  0.25882354f, 0.90588236f, 1);
         } else if (RhythmGame.songname.equals("star")){
-            Gdx.gl.glClearColor(0.55882354f,  0.45882354f, 0.70588236f, 1);
+            Gdx.gl.glClearColor(0f,  .4f, .4f, 1);
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -514,7 +514,7 @@ public class Solo extends AbstractScreen implements InputProcessor {
                 public void run() {
                     song2.play();
                 }
-            }, .8f);
+            }, .7f);
         }
     }
 

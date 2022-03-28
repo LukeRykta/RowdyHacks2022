@@ -140,9 +140,9 @@ public class Opening extends AbstractScreen implements InputProcessor {
     public void handleInput(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && canPress){
             RhythmGame.username = name.getText();
+            forwardSound.play();
             try{
                 context.setScreen(ScreenType.MENU);
-                forwardSound.play();
             } catch (ReflectionException e){
                 e.printStackTrace();
             }

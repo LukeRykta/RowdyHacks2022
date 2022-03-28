@@ -96,15 +96,15 @@ public class Menu extends AbstractScreen implements InputProcessor {
         redDinoSheet = new Texture("uiGFX/texturepacks/redDino.png"); // set file path for png
         TextureRegion[][] tmp = TextureRegion.split(redDinoSheet, redDinoSheet.getWidth() / 24, redDinoSheet.getHeight()); // declare region size
 
-        TextureRegion[] redFrames = new TextureRegion[7];
+        TextureRegion[] redFrames = new TextureRegion[6];
         int index = 0;
         for (int i = 0; i < 1; i++) {
-            for (int j = 17; j < 24; j++) {
+            for (int j = 18; j < 24; j++) {
                 redFrames[index++] = tmp[i][j];
             }
         }
 
-        redAnimation = new Animation<TextureRegion>(0.1f, redFrames);
+        redAnimation = new Animation<TextureRegion>(0.07f, redFrames);
     }
 
     private void getLeaderboard(){
@@ -232,7 +232,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
 
         initActors();
 
-
         stage.addActor(backgroundTable);
         stage.addActor(titleTable);
         stage.addActor(menuTable);
@@ -292,13 +291,13 @@ public class Menu extends AbstractScreen implements InputProcessor {
         quitButton.addListener(new ClickListener(){ // quit
             @Override
             public void clicked(InputEvent event, float x, float y){
+                backSound.play();
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        backSound.play();
                         Gdx.app.exit();
                     }
-                },0.8f);
+                },.6f);
             }
         });
     }
@@ -344,13 +343,13 @@ public class Menu extends AbstractScreen implements InputProcessor {
             forwardSound.play();
             dialog.show(stage).setY(dialog.getHeight()/2);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && quitButton.hasKeyboardFocus()){
+            backSound.play();
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    backSound.play();
                     Gdx.app.exit();
                 }
-            },0.8f);
+            },0.6f);
         }
 
     }
@@ -358,10 +357,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
     public void handleInput(float dt) throws ReflectionException {
         getFocus();
         handleEnter();
-
-        if (Gdx.input.isKeyPressed(Keys.B)){
-            b--;
-        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             backSound.play();

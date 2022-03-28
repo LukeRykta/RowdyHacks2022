@@ -71,9 +71,9 @@ public class MultiSelect extends AbstractScreen implements InputProcessor {
         menuTable.align(Align.center|Align.top);
         menuTable.setPosition(0, Gdx.graphics.getHeight());
 
-        song1Button = new TextButton("Song1", skin); // menuTable items
-        song2Button = new TextButton("Song2", skin);
-        song3Button = new TextButton ("Song3", skin);
+        song1Button = new TextButton(" rowdy ", skin); // menuTable items
+        song2Button = new TextButton("  star  ", skin);
+        song3Button = new TextButton ("  jump  ", skin);
         returnButton = new TextButton ("Back", skin);
 
         menuTable.row();

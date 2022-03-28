@@ -117,3 +117,6 @@ Thumbs.db
 /node_modules/
 /server/node_modules/
 /expanded-lock-345401-63d1024d6008.json
+/out/
+/desktop/out/
+/desktop/out/
