@@ -223,6 +223,7 @@ public class SoloSelect extends AbstractScreen implements InputProcessor {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            backSound.play();
             context.setScreen(ScreenType.MENU);
         }
     }

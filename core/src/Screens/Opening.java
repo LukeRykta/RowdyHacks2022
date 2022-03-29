@@ -77,19 +77,19 @@ public class Opening extends AbstractScreen implements InputProcessor {
         TextureRegion[][] tmp = TextureRegion.split(blueDinoSheet, blueDinoSheet.getWidth() / 24, blueDinoSheet.getHeight()); // declare region size
         TextureRegion[][] tmp2 = TextureRegion.split(greenDinoSheet, greenDinoSheet.getWidth() / 24, greenDinoSheet.getHeight()); // declare region size
 
-        TextureRegion[] blueFrames = new TextureRegion[11];
-        TextureRegion[] greenFrames = new TextureRegion[11];
+        TextureRegion[] blueFrames = new TextureRegion[4];
+        TextureRegion[] greenFrames = new TextureRegion[4];
         int index = 0;
         for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 11; j++) {
+            for (int j = 0; j < 4; j++) {
                 blueFrames[index] = tmp[i][j];
                 greenFrames[index] = tmp2[i][j];
                 index++;
             }
         }
 
-        blueAnimation = new Animation<TextureRegion>(0.1f, blueFrames);
-        greenAnimation = new Animation<TextureRegion>(0.1f, greenFrames);
+        blueAnimation = new Animation<TextureRegion>(0.1058f, blueFrames);
+        greenAnimation = new Animation<TextureRegion>(0.1058f, greenFrames);
     }
 
     public void initSkin(){
@@ -174,8 +174,8 @@ public class Opening extends AbstractScreen implements InputProcessor {
 
         batch.begin();
         batch.draw(grass, 0, 0, stage.getWidth(), 300);
-        batch.draw(currentBFrame, stage.getWidth() / 4 + b, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
-        batch.draw(currentGFrame, stage.getWidth() / 1.8f + b, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
+        batch.draw(currentBFrame, stage.getWidth() / 5, stage.getHeight()/5 - 128, 384, 384); // draw x and y position and scale size
+        batch.draw(currentGFrame, stage.getWidth() / 1.55f, stage.getHeight()/5 - 128, 384, 384); // draw x and y position and scale size
 
         batch.end();
 

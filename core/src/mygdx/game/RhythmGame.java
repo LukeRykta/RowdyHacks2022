@@ -35,6 +35,7 @@ public class RhythmGame extends Game {
 
 	@Override
 	public void create () {
+		Gdx.graphics.setTitle("DinoBEATs");
 		screenCache = new EnumMap<ScreenType, AbstractScreen>(ScreenType.class); // create our cache
 		screenViewport = new FitViewport(RhythmGame.V_WIDTH, RhythmGame.V_HEIGHT); // create our viewport using the scales
 

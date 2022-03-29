@@ -8,21 +8,19 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -30,14 +28,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import io.github.cdimascio.dotenv.Dotenv;
 import mygdx.game.RhythmGame;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import javax.swing.event.MenuKeyListener;
-import javax.swing.event.MenuListener;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Sorts.descending;
@@ -49,10 +43,15 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private boolean isMenuInit = false;
     private SpriteBatch batch;
     private Texture grass;
+    private Texture titlepic;
     private Animation redAnimation; // animation key frames
+    private Animation yellowAnimation; // animation key frames
     private Texture redDinoSheet; // loaded image sheet (png)
+    private Texture yellowDinoSheet; // loaded image sheet (png)
     float stateTime;
-    private int scroll=0;
+    private int grassFrontScroll =0;
+    private int grassBackScroll =0;
+    private int ydpos= -512; // init yellow dino position
 
     private TextButton singleButton;
     private TextButton multiButton;
@@ -70,8 +69,6 @@ public class Menu extends AbstractScreen implements InputProcessor {
     private Sound backSound;
     private Sound popSound;
     private Sound onSound;
-
-    int b =0;
 
     static String[] names = new String[1000];
     static int[] scores = new int[1000];
@@ -91,10 +88,13 @@ public class Menu extends AbstractScreen implements InputProcessor {
     }
 
     public void createTextures(){
+        titlepic = new Texture(Gdx.files.internal("uiGFX/backgrounds/frame1.png"));
         grass = new Texture(Gdx.files.internal("jungletile/jungle.png"));
-        grass.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        //grass.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         redDinoSheet = new Texture("uiGFX/texturepacks/redDino.png"); // set file path for png
+        yellowDinoSheet = new Texture("uiGFX/texturepacks/yellowDino.png"); // set file path for png
         TextureRegion[][] tmp = TextureRegion.split(redDinoSheet, redDinoSheet.getWidth() / 24, redDinoSheet.getHeight()); // declare region size
+        TextureRegion[][] tmp2 = TextureRegion.split(yellowDinoSheet, yellowDinoSheet.getWidth() / 24, yellowDinoSheet.getHeight()); // declare region size
 
         TextureRegion[] redFrames = new TextureRegion[6];
         int index = 0;
@@ -104,7 +104,17 @@ public class Menu extends AbstractScreen implements InputProcessor {
             }
         }
 
+        index = 0; //reset index to load new frames
+        TextureRegion[] yellowFrames = new TextureRegion[6];
+        for (int i = 0; i < 1; i++) {
+            for (int j = 4; j <10; j++) {
+                yellowFrames[index] = tmp2[i][j];
+                index++;
+            }
+        }
+
         redAnimation = new Animation<TextureRegion>(0.07f, redFrames);
+        yellowAnimation = new Animation<TextureRegion>(0.13f, yellowFrames);
     }
 
     private void getLeaderboard(){
@@ -181,17 +191,15 @@ public class Menu extends AbstractScreen implements InputProcessor {
         titleTable.align(Align.center|Align.top);
         titleTable.setPosition(0, Gdx.graphics.getHeight());
 
-        title = new Label("DINO BEATS\n A game by <L&B>", skin); // titleTable items
-        title.setScale(200, 200);
+        title = new Label("A game by L&B", skin); // titleTable items
 
         singleButton = new TextButton("Singleplayer", skin); // menuTable items
         multiButton = new TextButton("Multiplayer", skin);
         leaderButton = new TextButton ("Leaderboard", skin);
         quitButton = new TextButton("Quit Game", skin);
 
-        titleTable.add(title).expand().padTop(stage.getHeight()/4);
-        menuTable.row();
-        menuTable.padTop(stage.getHeight()/2);
+        titleTable.add(title).expand().padTop(stage.getHeight()/5);
+        menuTable.padTop(stage.getHeight()/2.5f);
         menuTable.add(singleButton).padBottom(30);
         menuTable.row();
         menuTable.add(multiButton).padBottom(30);
@@ -201,17 +209,10 @@ public class Menu extends AbstractScreen implements InputProcessor {
         menuTable.add(quitButton);
 
         dialog = new Dialog("Rowdy Leaderboard", skin, "dialog-modal");
-
         dialog.background("window");
-
-        dialog2 = new Dialog("Star", skin, "dialog-modal");
-        dialog2.background("window");
 
         if (dialog != null) {
             dialog.removeActor(leaderTable);
-        }
-        if (dialog2 != null) {
-            dialog2.removeActor(leaderTable);
         }
         getLeaderboard();
         for (int i = 0; i < 20; i++) {
@@ -223,12 +224,11 @@ public class Menu extends AbstractScreen implements InputProcessor {
             leaderTable.add(" " + String.format("%-12s", names[i]) + "  " + String.format("%12s", scores[i]) + " ").padTop(10);
             leaderTable.row();
         }
-        leaderTable.add("");
 
-        //dialog.debugAll();
         dialog.setMovable(false);
         dialog.button("return");
         dialog.getContentTable().add(leaderTable);
+        dialog.setPosition(stage.getWidth()/7, stage.getHeight()/4f);
 
         initActors();
 
@@ -277,7 +277,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 forwardSound.play();
-                dialog.show(stage).setY(dialog.getHeight()/2);
+                dialog.show(stage).setY(stage.getHeight()/2f-dialog.getHeight()/2.5f);
                 Timer.schedule(new Timer.Task() {
 
                     @Override
@@ -341,7 +341,7 @@ public class Menu extends AbstractScreen implements InputProcessor {
             context.setScreen(ScreenType.MSEL);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && leaderButton.hasKeyboardFocus()){
             forwardSound.play();
-            dialog.show(stage).setY(dialog.getHeight()/2);
+            dialog.show(stage).setY(stage.getHeight()/2f-dialog.getHeight()/2.5f);
         } else if (Gdx.input.isKeyJustPressed(Keys.ENTER) && quitButton.hasKeyboardFocus()){
             backSound.play();
             Timer.schedule(new Timer.Task() {
@@ -373,7 +373,9 @@ public class Menu extends AbstractScreen implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stateTime += delta;
-        TextureRegion currentFrame = (TextureRegion) redAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
+        TextureRegion currentRFrame = (TextureRegion) redAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
+        TextureRegion currentYFrame = (TextureRegion) yellowAnimation.getKeyFrame(stateTime, true); // get the key frame based on the state time
+
 
         try {
             update(delta);
@@ -386,12 +388,23 @@ public class Menu extends AbstractScreen implements InputProcessor {
         stage.draw();
 
         batch.begin();
-        batch.draw(grass, scroll-=5, 0, stage.getWidth()*3, 300);
-        if (scroll < -2*(stage.getWidth())){
-            scroll = 0;
+        batch.draw(grass, grassBackScroll -=3,100,stage.getWidth()*2,300);
+        batch.draw(grass, grassFrontScroll -=6, 0, stage.getWidth()*4, 300);
+
+        if (grassBackScroll < -(stage.getWidth())){
+            grassBackScroll = 0;
         }
-        batch.draw(currentFrame, stage.getWidth() / 7, stage.getHeight()/5 - 128, 512, 512); // draw x and y position and scale size
+        if (grassFrontScroll < -2*(stage.getWidth())){
+            grassFrontScroll = 0;
+        }
+        if (ydpos < -1000){
+            ydpos = (int)stage.getWidth()*2; // set yellow dino pos off screen to the right
+        }
+        batch.draw(currentYFrame, ydpos-=2, stage.getHeight()/4 - 48, 256, 256); // draw x and y yellow dino position and scale size
+        batch.draw(currentRFrame, stage.getWidth() / 16, stage.getHeight()/6 - 256, 640, 640); // draw x and y red dino position and scale size
+        batch.draw(titlepic, stage.getWidth()/2-384, stage.getHeight() *.8f, 768,192);
         batch.end();
+        //stage.draw();
     }
 
     @Override
