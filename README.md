@@ -1,6 +1,6 @@
 # RowdyHacks2022
 
-Download the JAR and start playing! (you will need 17 jre to run)
+Download the JAR from the "release" section on the github sidebar that is attached to the code and start playing! (you will need 17 jre to run)
 
 If you clone the repository you will need JDK 17 to compile!
 Built using Gradle. 
