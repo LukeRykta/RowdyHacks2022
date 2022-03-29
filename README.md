@@ -1,8 +1,11 @@
 # RowdyHacks2022
-You will need JDK 1.8 to compile!
+
+Download the JAR and start playing! (you will need 17 jre to run)
+
+If you clone the repository you will need JDK 17 to compile!
 Built using Gradle. 
 
-In your IDE, add a configuration using a java 8 SDK, 
+In your IDE, add a configuration using a java 17 SDK, 
 set the classpath (-cp) to 'RowdyHacks2022.desktop.main,'
 and select 'mygdx.game.DesktopLauncher' as your main class.
 
