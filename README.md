@@ -1,4 +1,6 @@
-# RowdyHacks2022
+# RowdyHacks2022 - DinoBEATs
+
+A game by Luke Ryktarsyk, Brandon Stevenson, Wesley Jackson, and Gabriela Mapa
 
 Download the JAR from the "release" section on the github sidebar that is attached to the code and start playing! (you will need 17 jre to run)
 
